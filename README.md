@@ -1,2 +1,4 @@
-# otus-java-2017-11-SmolyanovGregory
-Курсы Java OTUS 2017-11
+Курсы Java OTUS 
+Группа 2017-11
+Smolyanov Gregory(Смольянов Григорий)
+gsm-it@yandex.ru
