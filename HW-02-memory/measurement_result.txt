@@ -1,0 +1,6 @@
+Object - 8 bytes
+Empty String - 38 bytes
+Empty Array of Object - 16 bytes
+Array of Object size 10 - 56 bytes
+Empty Array of int - 16 bytes
+Array of int size 10 - 56 bytes
