@@ -51,16 +51,35 @@ public class MyArrayList<T> implements List<T>{
   }
 
   private class Iter implements Iterator<T> {
-    private int pos = 0;
+    int cursor;
+    int lastRet = -1;
 
     public boolean hasNext() {
-      return pos != size;
+      return cursor != size;
     }
 
     public T next() {
-      if (pos >= size)
+      int i = cursor;
+      if (i >= size)
         throw new NoSuchElementException();
-      return (T) elements[pos++];
+      Object[] elementData = elements;
+      if (i >= elementData.length)
+        throw new ConcurrentModificationException();
+      cursor = i + 1;
+      return (T) elementData[lastRet = i];
+    }
+
+    public void remove() {
+      if (lastRet < 0)
+        throw new IllegalStateException();
+
+      try {
+        MyArrayList.this.remove(lastRet);
+        cursor = lastRet;
+        lastRet = -1;
+      } catch (IndexOutOfBoundsException ex) {
+        throw new ConcurrentModificationException();
+      }
     }
   }
 
@@ -154,17 +173,19 @@ public class MyArrayList<T> implements List<T>{
   }
 
   /*
-  * метод  не реализован
+  * Возвращает list iterator
   * */
   public ListIterator<T> listIterator() {
-    throw new RuntimeException("Not realised");
+    return new ListItr(0);
   }
 
   /*
-  * метод  не реализован
+  * Возвращает list iterator начиная с указанной позиции в списке
   * */
-  public ListIterator<T> listIterator(int i) {
-    throw new RuntimeException("Not realised");
+  public ListIterator<T> listIterator(int idx) {
+    if (idx < 0 || idx > size)
+      throw new IndexOutOfBoundsException("Index: "+idx);
+    return new ListItr(idx);
   }
 
   /*
@@ -426,4 +447,59 @@ public class MyArrayList<T> implements List<T>{
   public void sort(Comparator<? super T> var1) {
     Arrays.sort((T[])this.elements, 0, this.size, var1);
   }
+
+  private class ListItr extends Iter implements ListIterator<T> {
+
+    ListItr(int index) {
+      super();
+      cursor = index;
+    }
+
+    public boolean hasPrevious() {
+      return cursor != 0;
+    }
+
+    public T previous() {
+      int i = cursor - 1;
+      if (i < 0)
+        throw new NoSuchElementException();
+      Object[] elementData = MyArrayList.this.elements;
+      if (i >= elementData.length)
+        throw new ConcurrentModificationException();
+      cursor = i;
+      return (T) elementData[lastRet = i];
+    }
+
+    public int nextIndex() {
+      return cursor;
+    }
+
+    public int previousIndex() {
+      return cursor - 1;
+    }
+
+    public void set(T t) {
+      if (lastRet < 0)
+        throw new IllegalStateException();
+
+      try {
+        MyArrayList.this.set(lastRet, t);
+      } catch (IndexOutOfBoundsException ex) {
+        throw new ConcurrentModificationException();
+      }
+    }
+
+    public void add(T t) {
+      try {
+        int i = cursor;
+        MyArrayList.this.add(i, t);
+        cursor = i + 1;
+        lastRet = -1;
+      } catch (IndexOutOfBoundsException ex) {
+        throw new ConcurrentModificationException();
+      }
+    }
+
+  }
+
 }
