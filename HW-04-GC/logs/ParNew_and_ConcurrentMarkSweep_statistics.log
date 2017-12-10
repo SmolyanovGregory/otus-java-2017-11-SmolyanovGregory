@@ -1,4 +1,3 @@
-pid = 3152@GS_MASTER_PC
 Garbage collectors: 'ParNew', 'ConcurrentMarkSweep'
 GC statistics period = 60 sec
 Garbage collection statistics for period 1:

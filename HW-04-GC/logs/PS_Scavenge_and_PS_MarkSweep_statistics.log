@@ -1,4 +1,3 @@
-pid = 5808@GS_MASTER_PC
 Garbage collectors: 'PS Scavenge', 'PS MarkSweep'
 GC statistics period = 60 sec
 Garbage collection statistics for period 1:
