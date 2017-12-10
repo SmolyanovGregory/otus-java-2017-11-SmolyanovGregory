@@ -10,7 +10,7 @@ import java.util.*;
  */
 
 public class Main {
-  private static final int INITIAL_LIST_SIZE = 8;
+  private static final int INITIAL_LIST_SIZE = 16;
 
   private static void printListElements(List list) {
     if (list != null) {
@@ -56,7 +56,8 @@ public class Main {
 
     // List enlargement
     System.out.println("List elements after adding any items:");
-    Collections.addAll(myList, 111, 222, 333 ,444, 555);
+    Collections.addAll(myList, 1111, 2222, 3333 ,4444, 5555);
     printListElements(myList);
+
   }
 }
