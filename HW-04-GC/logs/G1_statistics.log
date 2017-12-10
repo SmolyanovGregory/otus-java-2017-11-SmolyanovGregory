@@ -1,0 +1,22 @@
+Garbage collectors: 'G1 Young Generation', 'G1 Old Generation'
+GC statistics period = 60 sec
+Garbage collection statistics for period 1:
+GS name = 'G1 Young Generation', Collections = 74, Total time spent = 10.172 sec
+Garbage collection statistics for period 2:
+GS name = 'G1 Young Generation', Collections = 81, Total time spent = 10.234 sec
+GS name = 'G1 Old Generation', Collections = 1, Total time spent = 1.290 sec
+Garbage collection statistics for period 3:
+GS name = 'G1 Young Generation', Collections = 66, Total time spent = 14.648 sec
+GS name = 'G1 Old Generation', Collections = 8, Total time spent = 13.567 sec
+Garbage collection statistics for period 4:
+GS name = 'G1 Young Generation', Collections = 63, Total time spent = 13.920 sec
+GS name = 'G1 Old Generation', Collections = 10, Total time spent = 18.534 sec
+Garbage collection statistics for period 5:
+GS name = 'G1 Young Generation', Collections = 58, Total time spent = 15.620 sec
+GS name = 'G1 Old Generation', Collections = 12, Total time spent = 24.303 sec
+Garbage collection statistics for period 6:
+GS name = 'G1 Young Generation', Collections = 50, Total time spent = 14.122 sec
+GS name = 'G1 Old Generation', Collections = 12, Total time spent = 26.731 sec
+Garbage collection statistics for period 7:
+GS name = 'G1 Young Generation', Collections = 51, Total time spent = 11.211 sec
+GS name = 'G1 Old Generation', Collections = 17, Total time spent = 36.728 sec

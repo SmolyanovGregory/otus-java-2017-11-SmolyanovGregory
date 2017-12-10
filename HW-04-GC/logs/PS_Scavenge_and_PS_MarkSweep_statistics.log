@@ -1,0 +1,15 @@
+pid = 5808@GS_MASTER_PC
+Garbage collectors: 'PS Scavenge', 'PS MarkSweep'
+GC statistics period = 60 sec
+Garbage collection statistics for period 1:
+GS name = 'PS Scavenge', Collections = 46, Total time spent = 3.353 sec
+Garbage collection statistics for period 2:
+GS name = 'PS MarkSweep', Collections = 1, Total time spent = 3.532 sec
+GS name = 'PS Scavenge', Collections = 43, Total time spent = 3.155 sec
+Garbage collection statistics for period 3:
+GS name = 'PS MarkSweep', Collections = 15, Total time spent = 41.741 sec
+GS name = 'PS Scavenge', Collections = 13, Total time spent = 1.535 sec
+Garbage collection statistics for period 4:
+GS name = 'PS MarkSweep', Collections = 19, Total time spent = 52.501 sec
+Garbage collection statistics for period 5:
+GS name = 'PS MarkSweep', Collections = 23, Total time spent = 62.290 sec
