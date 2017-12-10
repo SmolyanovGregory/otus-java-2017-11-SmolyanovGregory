@@ -1,0 +1,40 @@
+Java HotSpot(TM) Client VM version 25.151-b12
+
+-------- Copy, MarkSweepCompact --------
+Uptime: 4 minutes
+Young garbage collector name = 'Copy', Collections = 55, Total time spent = 3,973 seconds 
+Old garbage collector name = 'MarkSweepCompact', Collections = 68, Total time spent = 1 minute
+
+GC statistic for periods of 60 sec in /logs/Copy_and_MarkSweepCompact_statistics.log
+
+-------- PS Scavenge, PS MarkSweep --------
+Uptime: 3 minutes
+Young garbage collector name = 'PS Scavenge', Collections = 102, Total time spent = 8,040 seconds
+Old garbage collector name = 'PS MarkSweep', Collections = 32, Total time spent = 1 minute
+
+GC statistic for periods of 60 sec in /logs/PS_Scavenge_and_PS_MarkSweep_statistics.log
+
+-------- ParNew, ConcurrentMarkSweep --------
+Uptime: 5 minutes
+Young garbage collector name = 'ParNew', Collections = 83, Total time spent = 8,819 seconds
+Old garbage collector name = 'ConcurrentMarkSweep', Collections = 76, Total time spent = 1 minute
+
+GC statistic for periods of 60 sec in /logs/ParNew_and_ConcurrentMarkSweep_statistics.log
+
+-------- G1 --------
+Uptime: 7 minutes
+Young garbage collector name = 'G1 Young Generation', Collections = 443, Total time spent = 1 minute
+Old garbage collector name = 'G1 Old Generation', Collections = 60, Total time spent = 2 minutes
+
+GC statistic for periods of 60 sec in /logs/G1_statistics.log
+
+======== Summary ========
+The garbage collectors effectiveness based on the application uptime, in descending order:
+G1
+ParNew and ConcurrentMarkSweep
+Copy and MarkSweepCompact
+PS Scavenge and PS MarkSweep
+
+The most effective for this case: G1
+The least effective for this case: PS Scavenge and PS MarkSweep
+
