@@ -2,11 +2,14 @@ Garbage collectors: 'Copy', 'MarkSweepCompact'
 GC statistics period = 60 sec
 Garbage collection statistics for period 1:
 GS name = 'Copy', Collections = 26, Total time spent = 2.84 sec
+
 Garbage collection statistics for period 2:
 GS name = 'Copy', Collections = 23, Total time spent = 1.738 sec
 GS name = 'MarkSweepCompact', Collections = 8, Total time spent = 6.557 sec
+
 Garbage collection statistics for period 3:
 GS name = 'Copy', Collections = 6, Total time spent = 0.151 sec
 GS name = 'MarkSweepCompact', Collections = 19, Total time spent = 19.619 sec
+
 Garbage collection statistics for period 4:
 GS name = 'MarkSweepCompact', Collections = 26, Total time spent = 30.874 sec
