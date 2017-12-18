@@ -39,22 +39,23 @@ public class MyTestUnitCore {
       }
     }
 
-    if (beforeMethodsNames.size() > 0 || testMethodsNames.size() >0 || afterMethodsNames.size() > 0) {
+    // executing tests
+    for(String testName : testMethodsNames.toArray(new String[testMethodsNames.size()])) {
       Object obj = ReflectionHelper.instantiate(klass);
 
-      Iterator<String> iter = beforeMethodsNames.iterator();
-      while (iter.hasNext()) {
-        callTest(obj, iter.next());
+      // execute before steps
+      for(String beforeMethodName : beforeMethodsNames.toArray(new String[beforeMethodsNames.size()])) {
+        ReflectionHelper.callMethod(obj, beforeMethodName);
       }
 
-      iter = testMethodsNames.iterator();
-      while (iter.hasNext()) {
-        callTest(obj, iter.next());
-      }
+      // execute test
+      System.out.println("--------------------");
+      callTest(obj, testName);
+      System.out.println("--------------------");
 
-      iter = afterMethodsNames.iterator();
-      while (iter.hasNext()) {
-        callTest(obj, iter.next());
+      // execute after steps
+      for(String afterMethodName : afterMethodsNames.toArray(new String[afterMethodsNames.size()])) {
+        ReflectionHelper.callMethod(obj, afterMethodName);
       }
     }
   }
