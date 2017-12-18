@@ -40,11 +40,11 @@ public class MyTestUnitCore {
     }
 
     // executing tests
-    for(String testName : testMethodsNames.toArray(new String[testMethodsNames.size()])) {
+    for(String testName : testMethodsNames) {
       Object obj = ReflectionHelper.instantiate(klass);
 
       // execute before steps
-      for(String beforeMethodName : beforeMethodsNames.toArray(new String[beforeMethodsNames.size()])) {
+      for(String beforeMethodName : beforeMethodsNames) {
         ReflectionHelper.callMethod(obj, beforeMethodName);
       }
 
@@ -54,7 +54,7 @@ public class MyTestUnitCore {
       System.out.println("--------------------");
 
       // execute after steps
-      for(String afterMethodName : afterMethodsNames.toArray(new String[afterMethodsNames.size()])) {
+      for(String afterMethodName : afterMethodsNames) {
         ReflectionHelper.callMethod(obj, afterMethodName);
       }
     }
