@@ -6,29 +6,27 @@ package ru.otus.smolyanov.atm.command;
  * Home work 06 - ATM
  */
 
-import ru.otus.smolyanov.atm.core.Banknote;
-import ru.otus.smolyanov.atm.core.CashMachine;
-import ru.otus.smolyanov.atm.core.ImpossibleToGiveSpecifiedAmountException;
-import ru.otus.smolyanov.atm.core.NotEnoughMoneyException;
-
+import ru.otus.smolyanov.atm.core.*;
 import java.util.Collection;
 import java.util.Scanner;
 import java.io.PrintStream;
+import java.io.InputStream;
 
 public class CashWithdrawalCommand implements Command {
 
   private final CashMachine cashMachine;
   private final PrintStream printStream;
-  private final Scanner scanner;
+  private final InputStream inputStream;
 
-  public CashWithdrawalCommand(CashMachine cashMachine, PrintStream printStream, Scanner scanner) {
+  public CashWithdrawalCommand(CashMachine cashMachine, PrintStream printStream, InputStream inputStream) {
     this.cashMachine = cashMachine;
     this.printStream = printStream;
-    this.scanner = scanner;
+    this.inputStream = inputStream;
   }
 
   @Override
   public void execute() {
+    Scanner scanner = new Scanner(inputStream);
     printStream.println("Please type amount: ");
 
     long amount = scanner.nextLong();

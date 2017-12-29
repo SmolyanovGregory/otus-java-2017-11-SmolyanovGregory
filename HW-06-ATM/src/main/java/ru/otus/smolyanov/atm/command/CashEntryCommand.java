@@ -13,21 +13,24 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.io.PrintStream;
+import java.io.InputStream;
 import java.util.StringTokenizer;
 
 public class CashEntryCommand implements Command {
   private final CashMachine cashMachine;
   private final PrintStream printStream;
-  private final Scanner scanner;
+  private final InputStream inputStream;
 
-  public CashEntryCommand(CashMachine cashMachine, PrintStream printStream, Scanner scanner) {
+  public CashEntryCommand(CashMachine cashMachine, PrintStream printStream, InputStream inputStream) {
     this.cashMachine = cashMachine;
     this.printStream = printStream;
-    this.scanner = scanner;
+    this.inputStream = inputStream;
   }
 
   @Override
   public void execute() {
+    Scanner scanner = new Scanner(inputStream);
+
     printStream.println("Please entry cash: ");
 
     Collection<String> notSupportedBanknotes = new LinkedList<>();

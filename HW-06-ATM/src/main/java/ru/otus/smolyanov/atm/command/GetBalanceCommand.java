@@ -7,7 +7,6 @@ package ru.otus.smolyanov.atm.command;
  */
 
 import ru.otus.smolyanov.atm.core.CashMachine;
-
 import java.io.PrintStream;
 
 public class GetBalanceCommand implements Command{

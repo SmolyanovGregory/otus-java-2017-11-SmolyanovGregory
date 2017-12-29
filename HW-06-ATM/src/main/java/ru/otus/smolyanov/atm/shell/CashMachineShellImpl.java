@@ -6,12 +6,8 @@ package ru.otus.smolyanov.atm.shell;
  * Home work 06 - ATM
  */
 
-import ru.otus.smolyanov.atm.command.CashEntryCommand;
-import ru.otus.smolyanov.atm.command.CashWithdrawalCommand;
-import ru.otus.smolyanov.atm.command.CommandInvoker;
-import ru.otus.smolyanov.atm.command.GetBalanceCommand;
+import ru.otus.smolyanov.atm.command.*;
 import ru.otus.smolyanov.atm.core.CashMachine;
-
 import java.io.PrintStream;
 import java.io.InputStream;
 import java.util.Scanner;
@@ -34,8 +30,8 @@ public class CashMachineShellImpl implements CashMachineShell {
 
     commandInvoker = new CommandInvoker(
       new GetBalanceCommand(cashMachine, printStream),
-      new CashWithdrawalCommand(cashMachine, printStream, new Scanner(inputStream)),
-      new CashEntryCommand(cashMachine, printStream, new Scanner(inputStream))
+      new CashWithdrawalCommand(cashMachine, printStream, inputStream),
+      new CashEntryCommand(cashMachine, printStream, inputStream)
     );
   }
 
