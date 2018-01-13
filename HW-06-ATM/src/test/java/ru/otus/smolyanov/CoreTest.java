@@ -4,7 +4,6 @@ import org.junit.*;
 import java.lang.reflect.*;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import ru.otus.smolyanov.atm.core.Banknote;
