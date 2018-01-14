@@ -6,6 +6,7 @@ package ru.otus.smolyanov.main;
  * Home work 07 - ATM Department
  */
 
+import java.util.LinkedList;
 import ru.otus.smolyanov.atm.core.*;
 import ru.otus.smolyanov.atm.department.*;
 import ru.otus.smolyanov.atm.exception.*;
@@ -48,6 +49,15 @@ public class Main {
     }
 
     System.out.println("Department balance after withdrawal of "+(amount+anotherAmount)+" = " + department.getBalance());
+
+    // cash entry
+    Collection<Banknote> moneyPack = new java.util.LinkedList<>();
+    moneyPack.add(Banknote.FIVE_HUNDRED);
+    moneyPack.add(Banknote.TEN);
+
+    department.getByNumber("Number 1").cashEntry(moneyPack);
+
+    System.out.println("Department balance after cash entry = "+ department.getBalance());
 
     System.out.println("Restore initial ATM state...");
     department.restoreInitialStateForAll();
