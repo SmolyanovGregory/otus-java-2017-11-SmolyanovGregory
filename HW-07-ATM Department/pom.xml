@@ -14,7 +14,7 @@
     </developers>
 
     <groupId>ru.otus.smolyanov</groupId>
-    <artifactId>HW-07-ATM Department</artifactId>
+    <artifactId>HW-07-ATM-Department</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
