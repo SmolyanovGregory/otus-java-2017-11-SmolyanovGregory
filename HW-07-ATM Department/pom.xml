@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>HW-06-ATM</name>
+    <name>HW-07-ATM Department</name>
     <description>Home work 07 (ATM Department)</description>
 
     <developers>
