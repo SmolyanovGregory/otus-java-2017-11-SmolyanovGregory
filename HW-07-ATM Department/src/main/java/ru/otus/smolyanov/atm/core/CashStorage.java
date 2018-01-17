@@ -6,14 +6,18 @@ package ru.otus.smolyanov.atm.core;
  * Home work 07 - ATM Department
  */
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Collection;
 
 // Originator
 public class CashStorage {
   private Map<Banknote, Integer> storage = new HashMap<>();
 
-  public Banknote[] get(Banknote banknote, int count) {
+  public Collection<Banknote> get(Banknote banknote, int count) {
     int currentCount = storage.get(banknote);
 
     if (count > currentCount)
@@ -21,7 +25,14 @@ public class CashStorage {
 
     storage.put(banknote, currentCount - count);
 
-    return new Banknote[count];
+    Collection<Banknote> result = new LinkedList<>();
+    if (count > 0) {
+      for (int i = 1; i <= count; i++) {
+        result.add(banknote);
+      }
+    }
+
+    return result;
   }
 
   public void put(Banknote banknote, int count) {

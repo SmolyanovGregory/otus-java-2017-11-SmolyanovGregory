@@ -34,21 +34,48 @@ public class Main {
 
     System.out.println("Initial department balance = " + department.getBalance());
 
-    long amount = 10_800;
+    long amount = 1_800;
     try {
       Collection<Banknote> cashPack = department.getByNumber("Number 2").cashWithdrawal(amount);
+      System.out.println("******** Money pack as cash withdrawal result of "+amount+" in the ATM Number 2: ********");
+      for (Banknote banknote : cashPack) {
+        System.out.println(banknote.getdDenomination());
+      }
+      System.out.println("*****************************");
     } catch (NotEnoughMoneyException | ImpossibleToGiveSpecifiedAmountException e) {
       System.out.println(e.getMessage());
     }
 
-    long anotherAmount = 12_410;
+    long anotherAmount = 2_430;
     try {
       Collection<Banknote> cashPack = department.getByNumber("Number 3").cashWithdrawal(anotherAmount);
+      System.out.println("******** Money pack as cash withdrawal result of "+anotherAmount+" in the ATM Number 3: ********");
+      for (Banknote banknote : cashPack) {
+        System.out.println(banknote.getdDenomination());
+      }
+      System.out.println("*****************************");
+
     } catch (NotEnoughMoneyException | ImpossibleToGiveSpecifiedAmountException e) {
       System.out.println(e.getMessage());
     }
 
-    System.out.println("Department balance after withdrawal of "+(amount+anotherAmount)+" = " + department.getBalance());
+    long thirdAmount = 600;
+    try {
+      Collection<Banknote> cashPack = department.getByNumber("Number 1").cashWithdrawal(thirdAmount);
+
+      System.out.println("******** Money pack as cash withdrawal result of "+thirdAmount+" in the ATM Number 1: ********");
+      for (Banknote banknote : cashPack) {
+        System.out.println(banknote.getdDenomination());
+      }
+      System.out.println("*****************************");
+    } catch (NotEnoughMoneyException | ImpossibleToGiveSpecifiedAmountException e) {
+      System.out.println(e.getMessage());
+    }
+
+    System.out.println("Department balance after withdrawal of "+(amount+anotherAmount+thirdAmount)+" = " + department.getBalance());
+
+
+
 
     // cash entry
     Collection<Banknote> moneyPack = new LinkedList<>();

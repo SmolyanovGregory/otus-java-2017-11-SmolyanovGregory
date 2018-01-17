@@ -41,8 +41,8 @@ public class TestCore {
     CashStorage cashStorage = new CashStorage();
     cashStorage.put(Banknote.FIVE_HUNDRED, 10);
     cashStorage.put(Banknote.FIVE, 1);
-    Assert.assertEquals(10, cashStorage.get(Banknote.FIVE_HUNDRED, 10).length);
-    Assert.assertEquals(1, cashStorage.get(Banknote.FIVE, 1).length);
+    Assert.assertEquals(10, cashStorage.get(Banknote.FIVE_HUNDRED, 10).size());
+    Assert.assertEquals(1, cashStorage.get(Banknote.FIVE, 1).size());
   }
 
   @Test

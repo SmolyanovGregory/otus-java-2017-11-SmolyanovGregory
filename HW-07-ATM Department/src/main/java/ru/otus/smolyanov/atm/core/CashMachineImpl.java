@@ -49,11 +49,14 @@ public class CashMachineImpl implements CashMachine {
 
           if (banknote.getdDenomination() <= remain) {
             int countToWithdrawal = Math.min(storage.getBanknoteCount(banknote), (int) remain / banknote.getdDenomination());
-            Banknote[] pack = storage.get(banknote, countToWithdrawal);
-            for (Banknote currentBanknote : pack) {
-              result.add(currentBanknote);
-            }
-            remain -= pack.length * banknote.getdDenomination();
+
+            Collection<Banknote> pack = storage.get(banknote, countToWithdrawal);
+            result.addAll(pack);
+
+//            for (Banknote currentBanknote : pack) {
+//              result.add(currentBanknote);
+//            }
+            remain -= pack.size() * banknote.getdDenomination();
           }
         }
 
