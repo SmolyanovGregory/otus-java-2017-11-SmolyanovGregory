@@ -53,9 +53,6 @@ public class CashMachineImpl implements CashMachine {
             Collection<Banknote> pack = storage.get(banknote, countToWithdrawal);
             result.addAll(pack);
 
-//            for (Banknote currentBanknote : pack) {
-//              result.add(currentBanknote);
-//            }
             remain -= pack.size() * banknote.getdDenomination();
           }
         }
