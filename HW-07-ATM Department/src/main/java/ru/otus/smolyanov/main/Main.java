@@ -73,10 +73,7 @@ public class Main {
     }
 
     System.out.println("Department balance after withdrawal of "+(amount+anotherAmount+thirdAmount)+" = " + department.getBalance());
-
-
-
-
+    
     // cash entry
     Collection<Banknote> moneyPack = new LinkedList<>();
     moneyPack.add(Banknote.FIVE_HUNDRED);
