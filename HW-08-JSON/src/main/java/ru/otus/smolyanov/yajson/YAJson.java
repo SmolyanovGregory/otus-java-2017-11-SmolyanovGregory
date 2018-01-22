@@ -17,17 +17,7 @@ import javax.json.*;
 
 public class YAJson {
 
-  private enum FieldType {
-    LONG,
-    DOUBLE,
-    BOOLEAN,
-    CHAR,
-    STRING,
-    ARRAY,
-    LIST,
-    SET,
-    OBJECT
-  }
+  private final YAJsonFieldType yaJsonFieldType = new YAJsonFieldType();
 
   public YAJson() {
   }
@@ -52,7 +42,7 @@ public class YAJson {
     JsonObjectBuilder builder = Json.createObjectBuilder();
     for (Field field : object.getClass().getDeclaredFields()) {
       // only for serializible field
-      if (!Modifier.isTransient(field.getModifiers()) && !field.getName().equals("this$0")) {
+      if (!Modifier.isTransient(field.getModifiers())) {
         field.setAccessible(true);
 
         try {
@@ -61,7 +51,7 @@ public class YAJson {
           if (fieldValue != null) {
             Object[] objArray = null;
 
-            switch (getFieldType(fieldValue.getClass())) {
+            switch (yaJsonFieldType.getFieldType(field.getType())) {
               case LONG:
                 builder.add(field.getName(), Long.valueOf(fieldValue.toString()));
                 break;
@@ -110,7 +100,7 @@ public class YAJson {
       if (element != null) {
         Object[] objArray = null;
 
-        switch (getFieldType(element.getClass())) {
+        switch (yaJsonFieldType.getFieldType(element.getClass())) {
           case LONG:
             builder.add(Long.valueOf(element.toString()));
             break;
@@ -149,45 +139,4 @@ public class YAJson {
     return builder;
   }
 
-  private FieldType getFieldType(Class valueClass) {
-    Set<Class> interfaces = new HashSet<>();
-    for(Class clazz : valueClass.getInterfaces()) {
-      interfaces.add(clazz);
-    }
-
-    if (valueClass.equals(byte.class)
-        || valueClass.equals(Byte.class)
-        || valueClass.equals(short.class)
-        || valueClass.equals(Short.class)
-        || valueClass.equals(int.class)
-        || valueClass.equals(Integer.class)
-        || valueClass.equals(long.class)
-        || valueClass.equals(Long.class)
-        )
-      return FieldType.LONG;
-    else if (valueClass.equals(float.class)
-        || valueClass.equals(Float.class)
-        || valueClass.equals(double.class)
-        || valueClass.equals(Double.class)
-        )
-      return FieldType.DOUBLE;
-    else if (valueClass.equals(boolean.class)
-        || valueClass.equals(Boolean.class)
-        )
-      return FieldType.BOOLEAN;
-    else if (valueClass.equals(char.class)
-        || valueClass.equals(Character.class)
-        )
-      return FieldType.CHAR;
-    else if (valueClass.equals(String.class))
-      return FieldType.STRING;
-    else if (valueClass.isArray())
-      return FieldType.ARRAY;
-    else if (interfaces.contains(List.class))
-      return FieldType.LIST;
-    else if (interfaces.contains(Set.class))
-      return FieldType.SET;
-
-    return FieldType.OBJECT;
-  }
 }
