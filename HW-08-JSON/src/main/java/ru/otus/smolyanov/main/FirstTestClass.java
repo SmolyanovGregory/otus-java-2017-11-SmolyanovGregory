@@ -6,10 +6,7 @@ package ru.otus.smolyanov.main;
  * Home work 08 - JSON object writer
  */
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 
 public class FirstTestClass {
   private int intValue = 1;
@@ -21,15 +18,11 @@ public class FirstTestClass {
   private char charValue = 'A';
   private int[] arrayOfInt = {1,2,3,4,5};
   private String[] arrayOfString = {"aa","bb","cc"};
-  private List<Integer> listOfInteger = new LinkedList<>();
+  private List<Integer> listOfInteger = Arrays.asList(7,null,9);
   private Set setOfString = new HashSet();
   private SecondTestClass secondTestClass = new SecondTestClass();
 
   public FirstTestClass() {
-    listOfInteger.add(7);
-    listOfInteger.add(null);
-    listOfInteger.add(9);
-
     setOfString.add("xx");
     setOfString.add(null);
     setOfString.add("zz");
