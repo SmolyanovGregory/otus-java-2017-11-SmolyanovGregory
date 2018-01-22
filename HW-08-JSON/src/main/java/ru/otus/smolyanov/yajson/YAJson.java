@@ -14,10 +14,18 @@ import java.io.StringWriter;
 import java.lang.reflect.*;
 import java.util.*;
 import javax.json.*;
+import java.util.function.Function;
 
 public class YAJson {
 
   private final YAJsonFieldType yaJsonFieldType = new YAJsonFieldType();
+
+  private Function<Object, Long> longFunction = o -> Long.valueOf(o.toString());
+  private Function<Object, Double> doubleFunction = o -> Double.valueOf(o.toString());
+  private Function<Object, Boolean> booleanFunction = o -> Boolean.valueOf(o.toString());
+  private Function<Object, String> stringFunction = o -> o.toString();
+  private Function<Object, JsonArrayBuilder> jsonArrayBuilderFunction = o -> getJsonArrayBuilder(o);
+  private Function<Object, JsonObjectBuilder> jsonObjectBuilderFunction = o -> getJsonObjectBuilder(o);
 
   public YAJson() {
   }
@@ -46,40 +54,36 @@ public class YAJson {
         field.setAccessible(true);
 
         try {
-          Object fieldValue = field.get(object);
+          Object obj = field.get(object);
 
-          if (fieldValue != null) {
-            Object[] objArray = null;
-
+          if (obj != null) {
             switch (yaJsonFieldType.getFieldType(field.getType())) {
               case LONG:
-                builder.add(field.getName(), Long.valueOf(fieldValue.toString()));
+                builder.add(field.getName(), longFunction.apply(obj));
                 break;
               case DOUBLE:
-                builder.add(field.getName(), Double.valueOf(fieldValue.toString()));
+                builder.add(field.getName(), doubleFunction.apply(obj));
                 break;
               case BOOLEAN:
-                builder.add(field.getName(), Boolean.valueOf(fieldValue.toString()));
+                builder.add(field.getName(), booleanFunction.apply(obj));
                 break;
               case CHAR:
-                builder.add(field.getName(), fieldValue.toString());
+                builder.add(field.getName(), stringFunction.apply(obj));
                 break;
               case STRING:
-                builder.add(field.getName(), fieldValue.toString());
+                builder.add(field.getName(), stringFunction.apply(obj));
                 break;
               case ARRAY:
-                builder.add(field.getName(), getJsonArrayBuilder(fieldValue));
+                builder.add(field.getName(), jsonArrayBuilderFunction.apply(obj));
                 break;
               case LIST:
-                objArray = ((List) fieldValue).toArray();
-                builder.add(field.getName(), getJsonArrayBuilder(objArray));
+                builder.add(field.getName(), jsonArrayBuilderFunction.apply(((List) obj).toArray()));
                 break;
               case SET:
-                objArray = ((Set) fieldValue).toArray();
-                builder.add(field.getName(), getJsonArrayBuilder(objArray));
+                builder.add(field.getName(), jsonArrayBuilderFunction.apply(((Set) obj).toArray()));
                 break;
               case OBJECT:
-                builder.add(field.getName(), getJsonObjectBuilder(fieldValue));
+                builder.add(field.getName(), jsonObjectBuilderFunction.apply(obj));
                 break;
             }
           }
@@ -98,37 +102,33 @@ public class YAJson {
       Object element = Array.get(array, i);
 
       if (element != null) {
-        Object[] objArray = null;
-
         switch (yaJsonFieldType.getFieldType(element.getClass())) {
           case LONG:
-            builder.add(Long.valueOf(element.toString()));
+            builder.add(longFunction.apply(element));
             break;
           case DOUBLE:
-            builder.add(Double.valueOf(element.toString()));
+            builder.add(doubleFunction.apply(element));
             break;
           case BOOLEAN:
-            builder.add(Boolean.valueOf(element.toString()));
+            builder.add(booleanFunction.apply(element));
             break;
           case CHAR:
-            builder.add(element.toString());
+            builder.add(stringFunction.apply(element));
             break;
           case STRING:
-            builder.add(element.toString());
+            builder.add(stringFunction.apply(element));
             break;
           case ARRAY:
-            builder.add(getJsonArrayBuilder(element));
+            builder.add(jsonArrayBuilderFunction.apply(element));
             break;
           case LIST:
-            objArray = ((List) element).toArray();
-            builder.add(getJsonArrayBuilder(objArray));
+            builder.add(jsonArrayBuilderFunction.apply(((List) element).toArray()));
             break;
           case SET:
-            objArray = ((Set) element).toArray();
-            builder.add(getJsonArrayBuilder(objArray));
+            builder.add(jsonArrayBuilderFunction.apply(((Set) element).toArray()));
             break;
           case OBJECT:
-            builder.add(getJsonObjectBuilder(element));
+            builder.add(jsonObjectBuilderFunction.apply(element));
             break;
         }
       } else {
@@ -138,5 +138,6 @@ public class YAJson {
 
     return builder;
   }
+
 
 }
