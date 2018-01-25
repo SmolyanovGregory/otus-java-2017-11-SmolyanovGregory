@@ -21,20 +21,8 @@ public class YAJson {
 
     StringBuilder stringBuilder = new StringBuilder();
 
-    // try to get function for process the field value
-    Function<Object, String> function = null;
-
-    for (YAJsonType yajsonType : YAJsonType.values()) {
-      if (yajsonType.getPredicate().test(object.getClass())) {
-        function = yajsonType.getFunction();
-      }
-    }
-
-    if (function != null) {
-      stringBuilder.append(function.apply(object));
-    } else {
-      stringBuilder.append(FunctionHelper.processObject(object));
-    }
+    Function<Object, String> function = FunctionHelper.getFunctionForProcess(object.getClass());
+    stringBuilder.append(function != null ? function.apply(object) : FunctionHelper.processObject(object));
 
     return stringBuilder.toString();
   }

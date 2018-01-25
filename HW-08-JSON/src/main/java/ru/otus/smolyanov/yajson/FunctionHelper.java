@@ -30,14 +30,8 @@ class FunctionHelper {
         }
 
         if (element != null) {
-          if (PredicateHelper.isPrimitive.test(element.getClass())) {
-            stringBuilder.append(FunctionHelper.processPrimitive.apply(element));
-          } else if (PredicateHelper.isString.test(element.getClass())) {
-            stringBuilder.append(FunctionHelper.processString.apply(element));
-          } else {
-            stringBuilder.append(element.toString());
-          }
-
+          Function<Object, String> function = getFunctionForProcess(element.getClass());
+          stringBuilder.append(function != null ? function.apply(element) : FunctionHelper.processObject(element));
         } else {
           stringBuilder.append(NULL);
         }
@@ -78,19 +72,9 @@ class FunctionHelper {
                 .append("\":");
 
             // try to get function for process the field value
-            Function<Object, String> function = null;
+            Function<Object, String> function = getFunctionForProcess(field.getType());
+            stringBuilder.append(function != null ? function.apply(obj) : FunctionHelper.processObject(obj));
 
-            for (YAJsonType yajsonType : YAJsonType.values()) {
-              if (yajsonType.getPredicate().test(field.getType())) {
-                function = yajsonType.getFunction();
-              }
-            }
-
-            if (function != null) {
-              stringBuilder.append(function.apply(obj));
-            } else {
-              stringBuilder.append(processObject(obj));
-            }
             needDelimiter = true;
           }
 
@@ -102,5 +86,17 @@ class FunctionHelper {
     stringBuilder.append("}");
 
     return stringBuilder.toString();
+  }
+
+  public static Function<Object, String> getFunctionForProcess(Class klass) {
+    Function<Object, String> result = null;
+
+    for (YAJsonType yajsonType : YAJsonType.values()) {
+      if (yajsonType.getPredicate().test(klass)) {
+        result = yajsonType.getFunction();
+      }
+    }
+
+    return result;
   }
 }
