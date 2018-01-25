@@ -28,6 +28,5 @@ public class Main {
 
     System.out.println("My library builded Json string:");
     System.out.println(new YAJson().toJson(obj));
-
   }
 }

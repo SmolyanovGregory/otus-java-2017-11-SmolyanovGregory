@@ -1,5 +1,6 @@
 package ru.otus.smolyanov.yajson;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -28,8 +29,8 @@ class PredicateHelper {
   static Predicate<Class> isArray = c -> c.isArray();
 
   // List sign
-  static Predicate<Class> isList = c -> c.equals(List.class);
+  static Predicate<Class> isList = c -> c.equals(List.class) || Arrays.asList(c.getInterfaces()).contains(List.class);
 
   // Set sign
-  static Predicate<Class> isSet = c -> c.equals(Set.class);
+  static Predicate<Class> isSet = c -> c.equals(Set.class) ||  Arrays.asList(c.getInterfaces()).contains(Set.class);
 }
