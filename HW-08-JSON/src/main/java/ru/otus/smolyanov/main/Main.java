@@ -27,7 +27,7 @@ public class Main {
     System.out.println(new Gson().toJson(obj));
 
     System.out.println("My library builded Json string:");
-    System.out.println(new YAJson().toJsonString(obj));
+    System.out.println(new YAJson().toJson(obj));
 
   }
 }

@@ -17,7 +17,7 @@ public class FirstTestClass {
   private boolean boolValue = true;
   private char charValue = 'A';
   private int[] arrayOfInt = {1,2,3,4,5};
-  private String[] arrayOfString = {"aa","bb","cc"};
+  private String[] arrayOfString = {"aa",null,"cc"};
   private List<Integer> listOfInteger = Arrays.asList(7,null,9);
   private Set setOfString = new HashSet();
   private SecondTestClass secondTestClass = new SecondTestClass();
