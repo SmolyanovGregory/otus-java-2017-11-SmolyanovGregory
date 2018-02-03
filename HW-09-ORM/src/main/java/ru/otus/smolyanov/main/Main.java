@@ -27,19 +27,18 @@ public class Main {
       name = "test";
       pass = "test";
      */
+    long dataSetId = 0;
     try(DBService dbService = new DBServiceImpl()) {
 
       System.out.println("Creating users...");
       dbService.save(new UserDataSet("User 1", 18));
-      dbService.save(new UserDataSet("User 2", 19));
+
+      UserDataSet userForEdit = new UserDataSet("User 2", 19);
+      dbService.save(userForEdit);
+
       dbService.save(new UserDataSet("User 3", 20));
 
-      UserDataSet userForEdit = null;
-
       for (UserDataSet user : dbService.getAllUsers()) {
-        if (user.getName().equals("User 2")) {
-          userForEdit = user;
-        }
         System.out.println(user.toString());
       }
 
@@ -55,8 +54,6 @@ public class Main {
 
       System.out.println("\nCreating bank accounts...");
       BankAccountDataSet account = new BankAccountDataSet("account # 1", "RUR", 123.45);
-      account.setId(100);
-
       dbService.save(account);
       dbService.save(new BankAccountDataSet("account # 2", "USD", 78.9));
 
@@ -64,7 +61,7 @@ public class Main {
         System.out.println(bankAccount.toString());
       }
 
-      account = dbService.getBankAccount(100);
+      account = dbService.getBankAccount(account.getId());
       account.setAmount(1_000_000);
       dbService.save(account);
 

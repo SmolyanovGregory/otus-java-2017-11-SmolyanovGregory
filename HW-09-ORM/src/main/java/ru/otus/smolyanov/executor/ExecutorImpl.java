@@ -20,12 +20,21 @@ public class ExecutorImpl implements Executor {
     this.connection = connection;
   }
 
-  public void exec(String sqlStatement) throws SQLException {
+  public List<Long> exec(String sqlStatement) throws SQLException {
+    List<Long> result = new LinkedList<>();
     try (Statement stmt = connection.createStatement()) {
       stmt.execute(sqlStatement);
+
+      // Retrieving any auto-generated keys.
+      ResultSet rs = stmt.getGeneratedKeys();
+      while (rs.next()) {
+        result.add(rs.getLong(1));
+      }
     }
+    return result;
   }
 
+  @Override
   public <T> T execQuery(String query, ResultHandler<T> handler) throws SQLException {
     try(Statement stmt = connection.createStatement()) {
       stmt.execute(query);
@@ -36,7 +45,7 @@ public class ExecutorImpl implements Executor {
 
   @Override
   public <T extends DataSet> T load(long id, Class<T> clazz) {
-    String sql = String.format(SQLHelper.getSelectByIdStatement(), clazz.getSimpleName(), id);
+    String sql = String.format(SQLHelper.SELECT_SINGLE_ROW_SQL, clazz.getSimpleName(), id);
 
     DataSet result = null;
     try {
@@ -65,7 +74,7 @@ public class ExecutorImpl implements Executor {
 
   @Override
   public <T extends DataSet> List<T> loadAll(Class<T> clazz) {
-    String sql = String.format(SQLHelper.getSelectAllStatement(), clazz.getSimpleName());
+    String sql = String.format(SQLHelper.SELECT_ALL_SQL, clazz.getSimpleName());
 
     List<DataSet> result = null;
     try {
@@ -100,9 +109,12 @@ public class ExecutorImpl implements Executor {
 
   @Override
   public <T extends DataSet> void save(T dataSet) {
-    String sqlStatement = load(dataSet.getId(), dataSet.getClass()) == null ? SQLHelper.getInsertStatement(dataSet) : SQLHelper.getUpdateStatement(dataSet);
+    String sqlStatement = dataSet.getId() == 0 ? SQLHelper.getInsertStatement(dataSet) : SQLHelper.getUpdateStatement(dataSet);
     try {
-      exec(sqlStatement);
+      List<Long> keyList = exec(sqlStatement);
+      if (!keyList.isEmpty()) {
+        dataSet.setId(keyList.get(0));
+      }
     } catch (SQLException e) {
       e.printStackTrace();
     }

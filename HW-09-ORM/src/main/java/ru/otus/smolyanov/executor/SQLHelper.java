@@ -9,6 +9,9 @@ package ru.otus.smolyanov.executor;
 import java.lang.reflect.Field;
 
 public class SQLHelper {
+  public static final String EXISTING_TABLES_LIST_SQL = "select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_TYPE = 'TABLE'";
+  public static final String SELECT_ALL_SQL = "select * from %s order by id";
+  public static final String SELECT_SINGLE_ROW_SQL = "select * from %s where id=%d";
 
   public static String getCreateTableStatement(Class clazz) {
     StringBuilder sb = new StringBuilder();
@@ -43,14 +46,6 @@ public class SQLHelper {
       return "varchar(256)";
     }
     return result;
-  }
-
-  public static String getSelectByIdStatement() {
-    return "select * from %s where id=%d";
-  }
-
-  public static String getSelectAllStatement() {
-    return "select * from %s order by id";
   }
 
   public static String getInsertStatement(Object object) {

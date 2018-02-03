@@ -13,6 +13,7 @@ import ru.otus.smolyanov.executor.SQLHelper;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
@@ -20,16 +21,23 @@ import java.util.HashSet;
 public class DBServiceImpl implements DBService{
 
   private final Connection connection;
-  private Set<Class> createdTables = new HashSet();
+  private Set<String> existingTables = new HashSet();
 
   public DBServiceImpl() {
     this.connection = ConnectionHelper.getConnection();
+
+    // filling the existing table list
+    for (String tableName : getExistingTables()) {
+      existingTables.add(tableName.toUpperCase());
+    }
   }
 
   private void checkTableExists(Class clazz) throws SQLException {
-    if (!createdTables.contains(clazz)) {
+    if (!existingTables.contains(clazz.getSimpleName().toUpperCase())) {
+      // creating table
       createTable(clazz);
-      createdTables.add(clazz);
+      // add the table name to the existing tables list
+      existingTables.add(clazz.getSimpleName().toUpperCase());
     }
   }
 
@@ -105,5 +113,25 @@ public class DBServiceImpl implements DBService{
     Executor executor = new ExecutorImpl(getConnection());
     checkTableExists(dataSet.getClass());
     executor.save(dataSet);
+  }
+
+  private List<String> getExistingTables() {
+    Executor executor = new ExecutorImpl(getConnection());
+    List<String> result = null;
+
+    try {
+      result = executor.execQuery(SQLHelper.EXISTING_TABLES_LIST_SQL, r -> {
+        List<String> tableNames = new LinkedList<>();
+
+        while (r.next()) {
+          tableNames.add(r.getString(1));
+        }
+        return tableNames;
+
+      });
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return result;
   }
 }
