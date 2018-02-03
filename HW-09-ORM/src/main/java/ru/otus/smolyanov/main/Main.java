@@ -27,7 +27,6 @@ public class Main {
       name = "test";
       pass = "test";
      */
-    long dataSetId = 0;
     try(DBService dbService = new DBServiceImpl()) {
 
       System.out.println("Creating users...");
