@@ -86,7 +86,6 @@ public class SQLHelper {
     }
     sb.append(")");
 
-    System.out.println(sb.toString());
     return sb.toString();
   }
 
