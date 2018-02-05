@@ -10,7 +10,6 @@ import java.lang.reflect.Field;
 import java.util.function.Predicate;
 
 public class SQLHelper {
-  public static final String EXISTING_TABLES_LIST_SQL = "select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_TYPE = 'TABLE'";
   public static final String SELECT_ALL_SQL = "select * from %s order by id";
   public static final String SELECT_SINGLE_ROW_SQL = "select * from %s where id=%d";
 
@@ -22,11 +21,13 @@ public class SQLHelper {
         .append(" (id bigint auto_increment ");
 
     for(Field field : clazz.getDeclaredFields()) {
-      field.setAccessible(true);
-      sb.append(", ")
-          .append(field.getName())
-          .append(" ")
-          .append(getDBFieldType(field.getType()));
+      if (isFieldSQLParticipant.test(field.getType())) {
+        field.setAccessible(true);
+        sb.append(", ")
+            .append(field.getName())
+            .append(" ")
+            .append(getDBFieldType(field.getType()));
+      }
     }
     sb.append(", primary key (id))");
 
