@@ -13,7 +13,6 @@ import ru.otus.smolyanov.executor.SQLHelper;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
@@ -21,28 +20,16 @@ import java.util.HashSet;
 public class DBServiceImpl implements DBService{
 
   private final Connection connection;
-  private Set<String> existingTables = new HashSet();
+  private Set<Class> registeredEntity = new HashSet<>();
 
   public DBServiceImpl() {
     this.connection = ConnectionHelper.getConnection();
 
-    // filling the existing table list
-    for (String tableName : getExistingTables()) {
-      existingTables.add(tableName.toUpperCase());
-    }
-  }
+    registeredEntity.add(UserDataSet.class);
+    registeredEntity.add(BankAccountDataSet.class);
 
-  private void checkTableExists(Class clazz) throws SQLException {
-    if (!existingTables.contains(clazz.getSimpleName().toUpperCase())) {
-      // creating table
-      createTable(clazz);
-      // add the table name to the existing tables list
-      existingTables.add(clazz.getSimpleName().toUpperCase());
-    }
-  }
-
-  private void createTable(Class clazz) throws SQLException {
-    new ExecutorImpl(getConnection()).exec(SQLHelper.getCreateTableStatement(clazz));
+    // create tables if it not exists
+    prepareSchema();
   }
 
   @Override
@@ -77,14 +64,12 @@ public class DBServiceImpl implements DBService{
   @Override
   public <T extends DataSet> T load(long id, Class<T> clazz) throws SQLException {
     Executor executor = new ExecutorImpl(getConnection());
-    checkTableExists(clazz);
     return executor.load(id, clazz);
   }
 
   @Override
   public <T extends DataSet> List<T> loadAll(Class<T> clazz) throws SQLException {
     Executor executor = new ExecutorImpl(getConnection());
-    checkTableExists(clazz);
     return executor.loadAll(clazz);
   }
 
@@ -111,27 +96,17 @@ public class DBServiceImpl implements DBService{
   @Override
   public <T extends DataSet> void save(T dataSet) throws SQLException {
     Executor executor = new ExecutorImpl(getConnection());
-    checkTableExists(dataSet.getClass());
     executor.save(dataSet);
   }
 
-  private List<String> getExistingTables() {
+  private void prepareSchema() {
     Executor executor = new ExecutorImpl(getConnection());
-    List<String> result = null;
-
-    try {
-      result = executor.execQuery(SQLHelper.EXISTING_TABLES_LIST_SQL, r -> {
-        List<String> tableNames = new LinkedList<>();
-
-        while (r.next()) {
-          tableNames.add(r.getString(1));
-        }
-        return tableNames;
-
-      });
-    } catch (SQLException e) {
-      e.printStackTrace();
+    for (Class klass : registeredEntity) {
+      try {
+        executor.exec(SQLHelper.getCreateTableStatement(klass));
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
     }
-    return result;
   }
 }

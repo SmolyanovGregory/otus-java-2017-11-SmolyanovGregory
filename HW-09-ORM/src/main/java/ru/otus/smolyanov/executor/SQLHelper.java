@@ -9,9 +9,8 @@ package ru.otus.smolyanov.executor;
 import java.lang.reflect.Field;
 
 public class SQLHelper {
-  public static final String EXISTING_TABLES_LIST_SQL = "select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_TYPE = 'TABLE'";
-  public static final String SELECT_ALL_SQL = "select * from %s order by id";
-  public static final String SELECT_SINGLE_ROW_SQL = "select * from %s where id=%d";
+  static final String SELECT_ALL_SQL = "select * from %s order by id";
+  static final String SELECT_SINGLE_ROW_SQL = "select * from %s where id=%d";
 
   public static String getCreateTableStatement(Class clazz) {
     StringBuilder sb = new StringBuilder();
