@@ -65,8 +65,6 @@ public class Main {
       for (UserDataSet user : dbService.getAllUsers()) {
         System.out.println(user.toString());
       }
-
-      dbService.close();
     }
   }
 }
