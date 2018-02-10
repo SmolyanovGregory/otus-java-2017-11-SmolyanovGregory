@@ -92,7 +92,7 @@ public class DBServiceCachedImpl implements DBService {
 
   @Override
   public void close() throws Exception {
-    System.out.println("Cache statisics: hit count = "+cache.getHitCount()+" miss count = "+cache.getMissCount());
+    System.out.println("Cache statisics: hit count = "+cache.getHitCount()+"; miss count = "+cache.getMissCount());
     cache.dispose();
     sessionFactory.close();
   }

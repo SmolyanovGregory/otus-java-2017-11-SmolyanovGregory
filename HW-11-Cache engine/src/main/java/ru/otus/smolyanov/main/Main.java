@@ -17,6 +17,8 @@ import java.util.ArrayList;
 
 public class Main {
 
+  private static final int BIG_OBJECTS_COUNT = 500;
+
   public static void main(String ... args) {
     try {
       new Main().run();
@@ -67,10 +69,8 @@ public class Main {
 
       // create many big objects...
       System.out.println("\nCreate many big objects...");
-      int size = 500;
-      List<SoftReference<BigObject>> references = new ArrayList<>(size);
-
-      for (int k = 0; k < size; k++) {
+      List<SoftReference<BigObject>> references = new ArrayList<>(BIG_OBJECTS_COUNT);
+      for (int k = 0; k < BIG_OBJECTS_COUNT; k++) {
         references.add(new SoftReference<>(new BigObject()));
       }
 

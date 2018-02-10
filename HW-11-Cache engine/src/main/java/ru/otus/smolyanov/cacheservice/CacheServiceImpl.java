@@ -37,39 +37,46 @@ public class CacheServiceImpl<K, V> implements CacheService<K, V> {
 
   @Override
   public void put(Element<K, V> element) {
-    if (elements.size() == maxElementsCount) {
-      K firstKey = elements.keySet().iterator().next();
-      elements.remove(firstKey);
-      miss++;
-    }
+    if (maxElementsCount > 0) {
 
-    K key = element.getKey();
-    elements.put(key, new SoftReference<>(element));
-
-    if (!isEternal) {
-      if (lifeTimeMs != 0) {
-        TimerTask lifeTimerTask = getTimerTask(key, lifeElement -> lifeElement.getCreationTime() + lifeTimeMs);
-        timer.schedule(lifeTimerTask, lifeTimeMs);
+      if (elements.size() == maxElementsCount) {
+        K firstKey = elements.keySet().iterator().next();
+        elements.remove(firstKey);
+        miss++;
       }
-      if (idleTimeMs != 0) {
-        TimerTask idleTimerTask = getTimerTask(key, idleElement -> idleElement.getLastAccessTime() + idleTimeMs);
-        timer.schedule(idleTimerTask, idleTimeMs, idleTimeMs);
+
+      K key = element.getKey();
+      elements.put(key, new SoftReference<>(element));
+
+      if (!isEternal) {
+        if (lifeTimeMs != 0) {
+          TimerTask lifeTimerTask = getTimerTask(key, lifeElement -> lifeElement.getCreationTime() + lifeTimeMs);
+          timer.schedule(lifeTimerTask, lifeTimeMs);
+        }
+        if (idleTimeMs != 0) {
+          TimerTask idleTimerTask = getTimerTask(key, idleElement -> idleElement.getLastAccessTime() + idleTimeMs);
+          timer.schedule(idleTimerTask, idleTimeMs, idleTimeMs);
+        }
       }
     }
   }
 
   @Override
   public Element<K, V> get(K key) {
-    SoftReference<Element<K, V>> softReference = elements.get(key);
+    if (maxElementsCount > 0) {
+      SoftReference<Element<K, V>> softReference = elements.get(key);
 
-    if (softReference != null) {
-      hit++;
-      if (softReference.get() != null) {
-        softReference.get().setAccessed();
+      if (softReference != null) {
+        hit++;
+        if (softReference.get() != null) {
+          softReference.get().setAccessed();
+        }
+        return softReference.get();
+      } else {
+        miss++;
+        return null;
       }
-      return softReference.get();
     } else {
-      miss++;
       return null;
     }
   }
