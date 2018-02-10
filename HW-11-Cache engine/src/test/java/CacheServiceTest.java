@@ -40,4 +40,14 @@ public class CacheServiceTest {
 
     Assert.assertEquals(cacheService.get(1).getValue(),  value);
   }
+
+  @Test
+  public void testZeroSizeCache() {
+    CacheService<Integer, String> zeroLengthCacheService = new CacheServiceImpl<>(0, 0, 0, true);
+
+    Element<Integer, String> element = new Element<>(1, "test value");
+    zeroLengthCacheService.put(element);
+
+    Assert.assertNull(zeroLengthCacheService.get(1));
+  }
 }
