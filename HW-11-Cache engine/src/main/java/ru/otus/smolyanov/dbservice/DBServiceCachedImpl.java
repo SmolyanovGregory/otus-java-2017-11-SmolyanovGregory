@@ -47,15 +47,11 @@ public class DBServiceCachedImpl implements DBService {
   @Override
   public String getMetaData() {
     Map<String, Object> properties = sessionFactory.getProperties();
-    StringBuilder stringBuilder = new StringBuilder();
-
-    stringBuilder.append("Connected to: ")
-        .append(properties.get(Environment.URL).toString())
-        .append("\n")
-        .append("Driver: ")
-        .append(properties.get(Environment.DRIVER).toString());
-
-    return stringBuilder.toString();
+    return "Connected to: " +
+        properties.get(Environment.URL).toString() +
+        "\n" +
+        "Driver: " +
+        properties.get(Environment.DRIVER).toString();
   }
 
   @Override
@@ -79,7 +75,7 @@ public class DBServiceCachedImpl implements DBService {
       List<UserDataSet> result = new UserDataSetDAO(session).loadAll();
       // store in cache
       for (UserDataSet user : result) {
-        cache.put(new Element<Long, DataSet>(user.getId(), user));
+        cache.put(new Element<>(user.getId(), user));
       }
 
       return result;

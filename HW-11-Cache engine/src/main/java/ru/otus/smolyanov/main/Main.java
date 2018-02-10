@@ -67,7 +67,7 @@ public class Main {
 
       // create many big objects...
       System.out.println("\nCreate many big objects...");
-      int size = 1000;
+      int size = 500;
       List<SoftReference<BigObject>> references = new ArrayList<>(size);
 
       for (int k = 0; k < size; k++) {

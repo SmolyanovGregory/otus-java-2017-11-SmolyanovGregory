@@ -7,7 +7,6 @@
 
 import org.junit.*;
 import ru.otus.smolyanov.cacheservice.*;
-import ru.otus.smolyanov.cacheservice.Element;
 
 public class CacheServiceTest {
 
@@ -15,7 +14,6 @@ public class CacheServiceTest {
 
   @Before
   public void setUp() {
-    //cacheService = new CacheServiceImpl.Builder(3).build();
     cacheService = new CacheServiceImpl<>(3, 0, 0, true);
   }
 
@@ -26,10 +24,10 @@ public class CacheServiceTest {
 
   @Test
   public void testCacheMaxSize() {
-    cacheService.put(new Element<Integer, String>(1, "One"));
-    cacheService.put(new Element<Integer, String>(2, "Two"));
-    cacheService.put(new Element<Integer, String>(3, "Three"));
-    cacheService.put(new Element<Integer, String>(4, "Four"));
+    cacheService.put(new Element<>(1, "One"));
+    cacheService.put(new Element<>(2, "Two"));
+    cacheService.put(new Element<>(3, "Three"));
+    cacheService.put(new Element<>(4, "Four"));
 
     Assert.assertEquals(cacheService.getMissCount(), 1);
   }
