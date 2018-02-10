@@ -59,11 +59,11 @@ public class DBServiceCachedImpl implements DBService {
     Element<Long, DataSet> element = cache.get(id);
 
     if (element != null) {
-      System.out.println("---> read object from cache.");
+      System.out.println("--> read object from cache.");
       return (UserDataSet) element.getValue();
     } else {
       try (Session session = sessionFactory.openSession()) {
-        System.out.println("---> read object from DB.");
+        System.out.println("==> read object from DB.");
         return new UserDataSetDAO(session).load(id);
       }
     }
@@ -93,6 +93,7 @@ public class DBServiceCachedImpl implements DBService {
   @Override
   public void close() throws Exception {
     System.out.println("Cache statisics: hit count = "+cache.getHitCount()+" miss count = "+cache.getMissCount());
+    cache.dispose();
     sessionFactory.close();
   }
 

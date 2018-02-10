@@ -57,7 +57,7 @@ public class Main {
       }
 
       System.gc();
-      Thread.sleep(100);
+      Thread.sleep(1000);
 
       System.out.println("\nRead all users by id:");
       for (Long id : userIdList) {
