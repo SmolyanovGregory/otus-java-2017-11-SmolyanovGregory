@@ -28,11 +28,41 @@ public class CacheServiceImpl<K, V> implements CacheService<K, V> {
   private final Map<K, SoftReference<Element<K, V>>> elements = new LinkedHashMap<>();
   private final Timer timer = new Timer();
 
-  public CacheServiceImpl(int maxElementsCount, long lifeTimeMs, long idleTimeMs, boolean isEternal) {
-    this.maxElementsCount = maxElementsCount;
-    this.lifeTimeMs = lifeTimeMs > 0 ? lifeTimeMs : 0;
-    this.idleTimeMs = idleTimeMs > 0 ? idleTimeMs : 0;
-    this.isEternal = lifeTimeMs == 0 && idleTimeMs == 0 || isEternal;
+  public static class Builder<K, V> {
+    private int maxElementsCount;
+    private long lifeTimeMs;
+    private long idleTimeMs;
+    private boolean isEternal = true;
+
+    public Builder(int maxElementsCount) {
+      this.maxElementsCount = maxElementsCount;
+    }
+
+    public Builder lifeTimeMs(int val) {
+      lifeTimeMs = val;
+      return this;
+    }
+
+    public Builder idleTimeMs(int val) {
+      idleTimeMs = val;
+      return this;
+    }
+
+    public Builder isEternal(boolean val) {
+      isEternal = val;
+      return this;
+    }
+
+    public CacheServiceImpl<K, V> build() {
+      return new CacheServiceImpl<>(this);
+    }
+  }
+
+  private CacheServiceImpl(Builder builder) {
+    maxElementsCount = builder.maxElementsCount;
+    lifeTimeMs = builder.lifeTimeMs > 0 ? builder.lifeTimeMs : 0;
+    idleTimeMs = builder.idleTimeMs > 0 ? builder.idleTimeMs : 0;
+    isEternal = builder.lifeTimeMs == 0 && builder.idleTimeMs == 0 || builder.isEternal;
   }
 
   @Override

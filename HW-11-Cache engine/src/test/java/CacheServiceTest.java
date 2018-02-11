@@ -14,7 +14,7 @@ public class CacheServiceTest {
 
   @Before
   public void setUp() {
-    cacheService = new CacheServiceImpl<>(3, 0, 0, true);
+    cacheService = new CacheServiceImpl.Builder<Integer, String>(3).build();
   }
 
   @After
@@ -43,7 +43,7 @@ public class CacheServiceTest {
 
   @Test
   public void testZeroSizeCache() {
-    CacheService<Integer, String> zeroLengthCacheService = new CacheServiceImpl<>(0, 0, 0, true);
+    CacheService<Integer, String> zeroLengthCacheService = new CacheServiceImpl.Builder<Integer, String>(0).build();
 
     Element<Integer, String> element = new Element<>(1, "test value");
     zeroLengthCacheService.put(element);

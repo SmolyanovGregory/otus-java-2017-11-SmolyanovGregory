@@ -23,7 +23,7 @@ public class DBServiceCachedImpl implements DBService {
   private static final int MAX_CACHE_ELEMENTS_COUNT = 15;
 
   private final SessionFactory sessionFactory;
-  private final CacheService<Long, DataSet> cache = new CacheServiceImpl<>(MAX_CACHE_ELEMENTS_COUNT, 0, 0, true);
+  private final CacheService<Long, DataSet> cache;
 
   public DBServiceCachedImpl() {
     Configuration configuration = new Configuration();
@@ -42,6 +42,8 @@ public class DBServiceCachedImpl implements DBService {
     configuration.setProperty(Environment.ENABLE_LAZY_LOAD_NO_TRANS, "true");
 
     sessionFactory = createSessionFactory(configuration);
+
+    cache = new CacheServiceImpl.Builder<Long, DataSet>(MAX_CACHE_ELEMENTS_COUNT).build();
   }
 
   @Override
