@@ -10,11 +10,11 @@ import ru.otus.smolyanov.cacheservice.*;
 
 public class CacheServiceTest {
 
-  private CacheService<Integer, String> cacheService;
+  private CacheService<String> cacheService;
 
   @Before
   public void setUp() {
-    cacheService = new CacheServiceImpl.Builder<Integer, String>(3).build();
+    cacheService = new CacheServiceImpl.Builder<String>(3).build();
   }
 
   @After
@@ -24,10 +24,10 @@ public class CacheServiceTest {
 
   @Test
   public void testCacheMaxSize() {
-    cacheService.put(new Element<>(1, "One"));
-    cacheService.put(new Element<>(2, "Two"));
-    cacheService.put(new Element<>(3, "Three"));
-    cacheService.put(new Element<>(4, "Four"));
+    cacheService.put(new ElementKey(1, String.class), "One");
+    cacheService.put(new ElementKey(2, String.class), "Two");
+    cacheService.put(new ElementKey(3, String.class), "Three");
+    cacheService.put(new ElementKey(4, String.class), "Four");
 
     Assert.assertEquals(cacheService.getMissCount(), 1);
   }
@@ -35,19 +35,17 @@ public class CacheServiceTest {
   @Test
   public void testOneElement() {
     String value = "test value";
-    Element<Integer, String> element = new Element<>(1, value);
-    cacheService.put(element);
+    cacheService.put(new ElementKey(1, String.class), value);
 
-    Assert.assertEquals(cacheService.get(1).getValue(),  value);
+    Assert.assertEquals(cacheService.get(new ElementKey(1, String.class)),  value);
   }
 
   @Test
   public void testZeroSizeCache() {
-    CacheService<Integer, String> zeroLengthCacheService = new CacheServiceImpl.Builder<Integer, String>(0).build();
+    CacheService<String> zeroLengthCacheService = new CacheServiceImpl.Builder<String>(0).build();
+    ElementKey key = new ElementKey(1, String.class);
+    zeroLengthCacheService.put(key, "test value");
 
-    Element<Integer, String> element = new Element<>(1, "test value");
-    zeroLengthCacheService.put(element);
-
-    Assert.assertNull(zeroLengthCacheService.get(1));
+    Assert.assertNull(zeroLengthCacheService.get(key));
   }
 }
