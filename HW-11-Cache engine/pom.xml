@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>HW-11-Cache engine</name>
+    <name>hw-11-cache-engine</name>
     <description>Home work 11 (My cache engine)</description>
 
     <groupId>ru.otus.smolyanov</groupId>
-    <artifactId>HW-11-Cache engine</artifactId>
+    <artifactId>hw-11-cache-engine</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <developers>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.193</version>
+            <version>1.4.196</version>
         </dependency>
 
         <dependency>
