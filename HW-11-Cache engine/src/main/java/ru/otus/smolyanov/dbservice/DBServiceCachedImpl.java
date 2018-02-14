@@ -58,7 +58,7 @@ public class DBServiceCachedImpl implements DBService {
 
   @Override
   public UserDataSet getUser(long id) {
-    DataSet user = cache.get(new ElementKey(id, UserDataSet.class));
+    DataSet user = cache.get(getCacheKey(id, UserDataSet.class));
 
     if (user != null) {
       System.out.println("--> read object from cache:");
@@ -108,5 +108,9 @@ public class DBServiceCachedImpl implements DBService {
 
   private ElementKey getCacheKey(DataSet dataSet) {
     return new ElementKey(dataSet.getId(), dataSet.getClass());
+  }
+
+  private ElementKey getCacheKey(long id, Class klass) {
+    return new ElementKey(id, klass);
   }
 }
