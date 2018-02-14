@@ -23,7 +23,7 @@ public class DBServiceCachedImpl implements DBService {
   private static final int MAX_CACHE_ELEMENTS_COUNT = 15;
 
   private final SessionFactory sessionFactory;
-  private final CacheService<Long, DataSet> cache;
+  private final CacheService<DataSet> cache;
 
   public DBServiceCachedImpl() {
     Configuration configuration = new Configuration();
@@ -43,7 +43,7 @@ public class DBServiceCachedImpl implements DBService {
 
     sessionFactory = createSessionFactory(configuration);
 
-    cache = new CacheServiceImpl.Builder<Long, DataSet>(MAX_CACHE_ELEMENTS_COUNT).build();
+    cache = new CacheServiceImpl.Builder<DataSet>(MAX_CACHE_ELEMENTS_COUNT).build();
   }
 
   @Override
@@ -58,14 +58,14 @@ public class DBServiceCachedImpl implements DBService {
 
   @Override
   public UserDataSet getUser(long id) {
-    Element<Long, DataSet> element = cache.get(id);
+    DataSet user = cache.get(new ElementKey(id, UserDataSet.class));
 
-    if (element != null) {
-      System.out.println("--> read object from cache.");
-      return (UserDataSet) element.getValue();
+    if (user != null) {
+      System.out.println("--> read object from cache:");
+      return (UserDataSet) user;
     } else {
       try (Session session = sessionFactory.openSession()) {
-        System.out.println("==> read object from DB.");
+        System.out.println("==> read object from DB:");
         return new UserDataSetDAO(session).load(id);
       }
     }
@@ -77,7 +77,7 @@ public class DBServiceCachedImpl implements DBService {
       List<UserDataSet> result = new UserDataSetDAO(session).loadAll();
       // store in cache
       for (UserDataSet user : result) {
-        cache.put(new Element<>(user.getId(), user));
+        cache.put(getCacheKey(user), user);
       }
 
       return result;
@@ -89,7 +89,7 @@ public class DBServiceCachedImpl implements DBService {
     try (Session session = sessionFactory.openSession()) {
       new UserDataSetDAO(session).save(user);
     }
-    cache.put(new Element<>(user.getId(), user));
+    cache.put(getCacheKey(user), user);
   }
 
   @Override
@@ -104,5 +104,9 @@ public class DBServiceCachedImpl implements DBService {
     builder.applySettings(configuration.getProperties());
     ServiceRegistry serviceRegistry = builder.build();
     return configuration.buildSessionFactory(serviceRegistry);
+  }
+
+  private ElementKey getCacheKey(DataSet dataSet) {
+    return new ElementKey(dataSet.getId(), dataSet.getClass());
   }
 }
