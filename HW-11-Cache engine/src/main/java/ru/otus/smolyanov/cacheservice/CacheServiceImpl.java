@@ -13,7 +13,7 @@ import java.util.TimerTask;
 import java.util.function.Function;
 import java.lang.ref.SoftReference;
 
-public class CacheServiceImpl<K, V> implements CacheService<K, V> {
+public class CacheServiceImpl<V> implements CacheService<V> {
 
   private static final int TIME_THRESHOLD_MS = 5;
 
@@ -25,10 +25,10 @@ public class CacheServiceImpl<K, V> implements CacheService<K, V> {
   private int hit = 0;
   private int miss = 0;
 
-  private final Map<K, SoftReference<Element<K, V>>> elements = new LinkedHashMap<>();
+  private final Map<ElementKey, SoftReference<Element<V>>> elements = new LinkedHashMap<>();
   private final Timer timer = new Timer();
 
-  public static class Builder<K, V> {
+  public static class Builder<V> {
     private int maxElementsCount;
     private long lifeTimeMs;
     private long idleTimeMs;
@@ -53,7 +53,7 @@ public class CacheServiceImpl<K, V> implements CacheService<K, V> {
       return this;
     }
 
-    public CacheServiceImpl<K, V> build() {
+    public CacheServiceImpl<V> build() {
       return new CacheServiceImpl<>(this);
     }
   }
@@ -66,17 +66,27 @@ public class CacheServiceImpl<K, V> implements CacheService<K, V> {
   }
 
   @Override
-  public void put(Element<K, V> element) {
+  public int getHitCount() {
+    return hit;
+  }
+
+  @Override
+  public int getMissCount() {
+    return miss;
+  }
+
+  @Override
+  public void put(ElementKey key, V value) {
     if (maxElementsCount > 0) {
 
       if (elements.size() == maxElementsCount) {
-        K firstKey = elements.keySet().iterator().next();
+        ElementKey firstKey = elements.keySet().iterator().next();
         elements.remove(firstKey);
         miss++;
       }
 
-      K key = element.getKey();
-      elements.put(key, new SoftReference<>(element));
+      Element element = new Element<V>(value);
+      elements.put(key, new SoftReference(element));
 
       if (!isEternal) {
         if (lifeTimeMs != 0) {
@@ -92,16 +102,19 @@ public class CacheServiceImpl<K, V> implements CacheService<K, V> {
   }
 
   @Override
-  public Element<K, V> get(K key) {
+  public V get(ElementKey key) {
     if (maxElementsCount > 0) {
-      SoftReference<Element<K, V>> softReference = elements.get(key);
+      SoftReference<Element<V>> softReference = elements.get(key);
 
       if (softReference != null) {
         hit++;
         if (softReference.get() != null) {
           softReference.get().setAccessed();
+          return softReference.get().getValue();
         }
-        return softReference.get();
+        else {
+          return null;
+        }
       } else {
         miss++;
         return null;
@@ -111,26 +124,11 @@ public class CacheServiceImpl<K, V> implements CacheService<K, V> {
     }
   }
 
-  @Override
-  public int getHitCount() {
-    return hit;
-  }
-
-  @Override
-  public int getMissCount() {
-    return miss;
-  }
-
-  @Override
-  public void dispose() {
-    timer.cancel();
-  }
-
-  private TimerTask getTimerTask(final K key, Function<Element<K, V>, Long> timeFunction) {
+  private TimerTask getTimerTask(final ElementKey key, Function<Element<V>, Long> timeFunction) {
     return new TimerTask() {
       @Override
       public void run() {
-        Element<K, V> element = elements.get(key).get();
+        Element<V> element = elements.get(key).get();
         if (element == null || isT1BeforeT2(timeFunction.apply(element), System.currentTimeMillis())) {
           elements.remove(key);
           this.cancel();
@@ -141,5 +139,10 @@ public class CacheServiceImpl<K, V> implements CacheService<K, V> {
 
   private boolean isT1BeforeT2(long t1, long t2) {
     return t1 < t2 + TIME_THRESHOLD_MS;
+  }
+
+  @Override
+  public void dispose() {
+    timer.cancel();
   }
 }

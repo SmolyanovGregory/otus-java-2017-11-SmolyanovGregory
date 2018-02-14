@@ -6,15 +6,12 @@ package ru.otus.smolyanov.cacheservice;
  * Home work 11 - My cache engine
  */
 
-public class Element<K, V> {
-
-  private final K key;
+class Element<V> {
   private final V value;
   private final long creationTime;
   private long lastAccessTime;
 
-  public Element(K key, V value) {
-    this.key = key;
+  public Element(V value) {
     this.value = value;
     this.creationTime = getCurrentTime();
     this.lastAccessTime = getCurrentTime();
@@ -24,23 +21,19 @@ public class Element<K, V> {
     return System.currentTimeMillis();
   }
 
-  public K getKey() {
-    return key;
-  }
-
-  public V getValue() {
+  protected V getValue() {
     return value;
   }
 
-  public long getCreationTime() {
+  protected long getCreationTime() {
     return creationTime;
   }
 
-  public long getLastAccessTime() {
+  protected long getLastAccessTime() {
     return lastAccessTime;
   }
 
-  public void setAccessed() {
+  protected void setAccessed() {
     lastAccessTime = getCurrentTime();
   }
 }

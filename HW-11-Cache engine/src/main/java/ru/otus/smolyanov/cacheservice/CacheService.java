@@ -6,11 +6,11 @@ package ru.otus.smolyanov.cacheservice;
  * Home work 11 - My cache engine
  */
 
-public interface CacheService<K, V> {
+public interface CacheService<V> {
 
-  void put(Element<K, V> element);
+  void put(ElementKey key, V value);
 
-  Element<K, V> get(K key);
+  V get(ElementKey key);
 
   int getHitCount();
 
