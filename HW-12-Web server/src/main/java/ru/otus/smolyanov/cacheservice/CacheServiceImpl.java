@@ -155,4 +155,19 @@ public class CacheServiceImpl<V> implements CacheService<V> {
   public int getSize() {
     return maxElementsCount;
   }
+
+  @Override
+  public long getLifeTimeMs() {
+    return lifeTimeMs;
+  }
+
+  @Override
+  public long getIdleTimeMs() {
+    return idleTimeMs;
+  }
+
+  @Override
+  public boolean getIsEternal() {
+    return isEternal;
+  }
 }

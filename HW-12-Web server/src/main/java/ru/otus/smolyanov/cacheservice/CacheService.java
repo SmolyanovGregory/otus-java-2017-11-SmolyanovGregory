@@ -19,4 +19,10 @@ public interface CacheService<V> {
   void dispose();
 
   int getSize();
+
+  long getLifeTimeMs();
+
+  long getIdleTimeMs();
+
+  boolean getIsEternal();
 }

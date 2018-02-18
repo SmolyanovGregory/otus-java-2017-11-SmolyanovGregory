@@ -39,9 +39,13 @@ public class AdminServlet extends BaseServlet {
 
         Map<String, Object> pageVariables = new HashMap<>();
         pageVariables.put(LOGIN_PARAMETER_NAME, login.toString());
+
         pageVariables.put("cacheSize", cacheService.getSize());
         pageVariables.put("hitCount", cacheService.getHitCount());
         pageVariables.put("missCount", cacheService.getMissCount());
+        pageVariables.put("lifeTimeMs", cacheService.getLifeTimeMs());
+        pageVariables.put("idleTimeMs", cacheService.getIdleTimeMs());
+        pageVariables.put("isEternal", cacheService.getIsEternal());
 
         response.getWriter().println(TemplateProcessor.instance().getPage(ADMIN_PAGE_TEMPLATE, pageVariables));
       } else {
