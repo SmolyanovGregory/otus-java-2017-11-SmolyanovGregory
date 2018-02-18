@@ -1,0 +1,57 @@
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Admin</title>
+</head>
+<body>
+
+  <table border=1 cellspacing=0 cellpadding=0>
+      <tr>
+          <td width=200 valign=center align=center colspan="2">
+              Cache status:
+          </td>
+      </tr>
+
+      <tr>
+          <td width=100 valign=center align=left>
+              Cache size:
+          </td>
+          <td width=100 valign=center align=center>
+              ${cacheSize}
+          </td>
+      </tr>
+
+      <tr>
+          <td width=100 valign=center align=left>
+              Hit count:
+          </td>
+          <td width=100 valign=center align=center>
+              ${hitCount}
+          </td>
+      </tr>
+
+      <tr>
+          <td width=100 valign=center align=left>
+              Miss count:
+          </td>
+          <td width=100 valign=center align=center>
+              ${missCount}
+          </td>
+      </tr>
+  </table>
+
+  <br>
+
+  <form method="POST" name="sign" action="/admin">
+  <table border=0 cellspacing=0 cellpadding=0>
+      <tr>
+          <td width=200 valign=center align=center>
+              <input type="Submit" value="Refresh"/>
+          </td>
+      </tr>
+
+  </table>
+  </form>
+
+</body>
+</html>
