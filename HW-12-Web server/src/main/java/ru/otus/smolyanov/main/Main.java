@@ -55,10 +55,8 @@ public class Main {
     System.out.println("******** web server started on "+port+" port ********");
 
     UserDataSetGenerator dataGenerator = new UserDataSetGenerator(dbService, userGeneratorPeriodMs);
-    dataGenerator.run();
+    new Thread(dataGenerator).start();
 
     server.join();
-
-    dbService.close();
   }
 }
