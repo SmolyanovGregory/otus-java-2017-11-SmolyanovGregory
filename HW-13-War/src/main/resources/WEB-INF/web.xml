@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<web-app>
+
+    <display-name>hw-13-war</display-name>
+    <description>Home work 13 (web archive)</description>
+
+    <servlet>
+        <servlet-name>AdminServlet</servlet-name>
+        <servlet-class>ru.otus.smolyanov.servlets.AdminServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>SignInServlet</servlet-name>
+        <servlet-class>ru.otus.smolyanov.servlets.SignInServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>UserServlet</servlet-name>
+        <servlet-class>ru.otus.smolyanov.servlets.UserServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>UserGenerationServlet</servlet-name>
+        <servlet-class>ru.otus.smolyanov.servlets.UserGenerationServlet</servlet-class>
+    </servlet>
+
+
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/admin</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SignInServlet</servlet-name>
+        <url-pattern>/signin</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>UserServlet</servlet-name>
+        <url-pattern>/user</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>UserGenerationServlet</servlet-name>
+        <url-pattern>/usergeneratation</url-pattern>
+    </servlet-mapping>
+
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+</web-app>
