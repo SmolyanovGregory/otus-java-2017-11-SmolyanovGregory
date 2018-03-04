@@ -23,6 +23,7 @@ public class Main {
   }
 
   private void run() throws Exception {
+    System.out.println("Start...");
     int[] randomIntArray = RandomIntArrayHelper.getRandomIntArray(100_000);
     ArrayPrintHelper.printArray("Unsorted int array:", randomIntArray);
 
@@ -30,6 +31,7 @@ public class Main {
     sorter.sort(randomIntArray);
 
     ArrayPrintHelper.printArray("Sorted int array:", randomIntArray);
+    System.out.println("Unsorted and sorted arrays are saved into result.log");
   }
 
   // random int array generator
