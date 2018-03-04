@@ -5,6 +5,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import ru.otus.smolyanov.accountservice.AccountService;
 import ru.otus.smolyanov.cacheservice.CacheService;
 import ru.otus.smolyanov.config.AppConfig;
+import ru.otus.smolyanov.datasetgenerator.UserDataSetGenerator;
 import ru.otus.smolyanov.dbservice.DBService;
 
 import javax.servlet.ServletConfig;
@@ -27,13 +28,16 @@ public class BaseServlet extends HttpServlet {
   static final String ADMIN_RES = "admin";
   static final String USER_PAGE_TEMPLATE = "user.html";
   private static final String APPLICATION_CONTEXT_PARAM_NAME = "springApplicationContext";
-  static final String USERS_GENERATING_THREAD_PARAM_NAME = "users_generating_thread";
+  static final String USERS_GENERATING_STATUS = "users_generating_status";
+  static final String STATUS_ON = "on";
+  static final String STATUS_OFF = "off";
 
   ApplicationContext context;
 
   AccountService accountService;
   DBService dbService;
   CacheService cacheService;
+  UserDataSetGenerator randomUserGenerator;
 
   public void init(ServletConfig config) {
     ServletContext servletContext = config.getServletContext();
@@ -49,6 +53,11 @@ public class BaseServlet extends HttpServlet {
     accountService = (AccountService) context.getBean("accountService");
     dbService = (DBService) context.getBean("dbService");
     cacheService = (CacheService) context.getBean("cacheService");
+    randomUserGenerator = (UserDataSetGenerator) context.getBean("userDatasetGenerator");
+
+    if (randomUserGenerator.getState().equals(Thread.State.NEW)) {
+      randomUserGenerator.start();
+    }
   }
 
 }

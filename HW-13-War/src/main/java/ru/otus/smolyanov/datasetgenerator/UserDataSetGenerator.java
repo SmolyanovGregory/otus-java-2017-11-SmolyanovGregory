@@ -9,11 +9,12 @@ import ru.otus.smolyanov.dbservice.DBService;
  * Home work 13 - web archive
  */
 
-public class UserDataSetGenerator implements Runnable{
+public class UserDataSetGenerator extends Thread{
 
   private final DBService dbService;
   private final int sleepTime;
   private long firstSavedUserId = 0;
+  private boolean isGenerating = false;
 
   public UserDataSetGenerator(DBService dbService, int sleepTime) {
     this.dbService = dbService;
@@ -23,20 +24,22 @@ public class UserDataSetGenerator implements Runnable{
   @Override
   public void run() {
     while (true) {
-      UserDataSet user = createRandomUserDataSet();
-      dbService.saveUser(user);
+      if (isGenerating) {
+        UserDataSet user = createRandomUserDataSet();
+        dbService.saveUser(user);
 
-      if (firstSavedUserId == 0) {
-        firstSavedUserId = user.getId();
-      }
+        if (firstSavedUserId == 0) {
+          firstSavedUserId = user.getId();
+        }
 
-      // random read between created users
-      UserDataSet anotherUser = dbService.getUser(getRandomUserId(firstSavedUserId, user.getId()));
+        // random read between created users
+        UserDataSet anotherUser = dbService.getUser(getRandomUserId(firstSavedUserId, user.getId()));
 
-      try {
-        Thread.sleep(sleepTime);
-      } catch (InterruptedException e) {
-        break;
+        try {
+          Thread.sleep(sleepTime);
+        } catch (InterruptedException e) {
+          break;
+        }
       }
     }
   }
@@ -60,6 +63,18 @@ public class UserDataSetGenerator implements Runnable{
 
   private long getRandomUserId(long from, long to) {
     return (long) (Math.random() * (to - from))+from;
+  }
+
+  public void startGenerating() {
+    isGenerating = true;
+  }
+
+  public void stopGenerating() {
+    isGenerating = false;
+  }
+
+  public boolean isGenerating() {
+    return isGenerating;
   }
 
 }

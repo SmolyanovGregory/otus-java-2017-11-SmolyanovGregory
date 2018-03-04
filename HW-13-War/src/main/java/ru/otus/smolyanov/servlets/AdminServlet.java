@@ -26,7 +26,6 @@ public class AdminServlet extends BaseServlet {
       response.setStatus(HttpServletResponse.SC_OK);
 
       if (accountService.isAdmin(login.toString(), password.toString())) {
-        Object threadObject = request.getSession().getAttribute(USERS_GENERATING_THREAD_PARAM_NAME);
 
         Map<String, Object> pageVariables = new HashMap<>();
         pageVariables.put(LOGIN_PARAMETER_NAME, login.toString());
@@ -37,7 +36,8 @@ public class AdminServlet extends BaseServlet {
         pageVariables.put("lifeTimeMs", cacheService.getLifeTimeMs());
         pageVariables.put("idleTimeMs", cacheService.getIdleTimeMs());
         pageVariables.put("isEternal", cacheService.getIsEternal());
-        pageVariables.put("btnCaption", threadObject == null ? "Start user generating process" : "Stop user generating process");
+
+        pageVariables.put("btnCaption", randomUserGenerator.isGenerating() ? "Stop user generating process" : "Start user generating process");
 
         response.getWriter().println(TemplateProcessor.instance().getPage(ADMIN_PAGE_TEMPLATE, pageVariables));
       } else {

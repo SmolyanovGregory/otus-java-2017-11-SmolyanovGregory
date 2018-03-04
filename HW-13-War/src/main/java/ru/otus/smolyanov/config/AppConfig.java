@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Description;
 import ru.otus.smolyanov.accountservice.AccountService;
 import ru.otus.smolyanov.accountservice.AccountServiceImpl;
 import ru.otus.smolyanov.cacheservice.CacheService;
+import ru.otus.smolyanov.datasetgenerator.UserDataSetGenerator;
 import ru.otus.smolyanov.dbservice.DBService;
 import ru.otus.smolyanov.dbservice.DBServiceCachedImpl;
 
@@ -34,5 +35,11 @@ public class AppConfig {
   @Description("Provides a cache service")
   public CacheService cacheService() {
     return dbService().getCache();
+  }
+
+  @Bean(name = "userDatasetGenerator")
+  @Description("Provides a random user data set generator")
+  public UserDataSetGenerator userDataSetGenerator() {
+    return new UserDataSetGenerator(dbService(), 3000);
   }
 }
