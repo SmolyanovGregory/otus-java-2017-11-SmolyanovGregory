@@ -23,7 +23,7 @@ public class Main {
   }
 
   private void run() throws Exception {
-    int[] randomIntArray = RandomIntArrayHelper.getRandomIntArray(1000);
+    int[] randomIntArray = RandomIntArrayHelper.getRandomIntArray(100_000);
     ArrayPrintHelper.printArray("Unsorted int array:", randomIntArray);
 
     ArraySorter sorter = new MultiThreadedArraySorterImpl(THREAD_COUNT);
@@ -34,10 +34,10 @@ public class Main {
 
   // random int array generator
   private static class RandomIntArrayHelper {
-    private static final int MAX_NUMBER = 1000; // max number value
+    private static final int MAX_NUMBER = 1_000; // max number value
 
-    public static int[] getRandomIntArray(int arrayMaxSize) {
-      int[] result = new int[arrayMaxSize];
+    static int[] getRandomIntArray(int arraySize) {
+      int[] result = new int[arraySize];
 
       for (int i = 0; i < result.length; i++) {
         result[i] = (int) (Math.random() * MAX_NUMBER);
