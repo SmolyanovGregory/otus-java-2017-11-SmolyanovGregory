@@ -22,9 +22,8 @@ public class MultiThreadedArraySorterImpl implements ArraySorter {
       throw new UnsupportedOperationException("Thread count must be greater or equals then the array length.");
 
     // creating threads list
-    List<Thread> threads = new ArrayList<>();
+    List<ArraySortingThread> threads = new ArrayList<>();
 
-    // creating subarrays list
     List<int[]> sortedSubArrays = new ArrayList<>();
 
     // creating threads
@@ -33,27 +32,27 @@ public class MultiThreadedArraySorterImpl implements ArraySorter {
        int indexFrom = i* array.length / threadCount;
        int indexTo = (i+1)*array.length / threadCount - 1;
 
-       Thread thread = new ArraySortingThread(Arrays.copyOfRange(array, indexFrom, indexTo + 1), new Callback() {
-         @Override
-         public void sendResult(int[] array) {
-           sortedSubArrays.add(array);
-         }
-       });
+      ArraySortingThread thread = new ArraySortingThread(Arrays.copyOfRange(array, indexFrom, indexTo + 1));
        thread.setName("Sorting thread # "+ (++threadNumber));
        threads.add(thread);
     }
 
     // sorting arrays
-    for(Thread thread : threads) {
+    for(ArraySortingThread thread : threads) {
       thread.start();
     }
 
-    for(Thread thread : threads) {
+    for(ArraySortingThread thread : threads) {
       try {
         thread.join();
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
+    }
+
+    // get results
+    for(ArraySortingThread thread : threads) {
+      sortedSubArrays.add(thread.getArray());
     }
 
     // merge sorted subarrays

@@ -11,22 +11,22 @@ import java.util.Arrays;
 public class ArraySortingThread extends Thread {
 
   private int[] array;
-  private Callback callback;
 
-  public ArraySortingThread(int[] array, Callback callback) {
+  public ArraySortingThread(int[] array) {
     this.array = array;
-    this.callback = callback;
   }
 
   @Override
   public void run() {
     super.run();
     sort();
-    callback.sendResult(array);
   }
 
   private void sort() {
     Arrays.sort(array);
   }
 
+  public int[] getArray() {
+    return array;
+  }
 }

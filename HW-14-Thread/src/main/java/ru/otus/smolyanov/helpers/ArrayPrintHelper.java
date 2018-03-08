@@ -2,6 +2,7 @@ package ru.otus.smolyanov.helpers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import java.util.Arrays;
 
 /**
  * Created by Gregory Smolyanov.
@@ -14,19 +15,8 @@ public class ArrayPrintHelper {
   private static final Logger logger = LogManager.getLogger();
 
   public static void printArray(String title, int[] array) {
-    StringBuilder sb = new StringBuilder();
-
-    boolean needComma = false;
-    for (int i : array) {
-      if (needComma) {
-        sb.append(", ");
-      } else {
-        needComma = true;
-      }
-      sb.append(i);
-    }
     logger.info(title);
-    logger.info(sb.toString());
+    logger.info(Arrays.toString(array));
   }
 
 }
