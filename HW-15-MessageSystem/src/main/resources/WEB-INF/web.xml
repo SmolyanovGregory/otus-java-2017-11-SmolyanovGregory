@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<web-app>
+
+    <display-name>hw-15-ms</display-name>
+    <description>Home work 15 (message system)</description>
+
+    <servlet>
+        <servlet-name>WebSocketAdmServlet</servlet-name>
+        <servlet-class>ru.otus.smolyanov.servlets.WebSocketAdmServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>WebSocketSignInServlet</servlet-name>
+        <servlet-class>ru.otus.smolyanov.servlets.WebSocketSignInServlet</servlet-class>
+    </servlet>
+
+
+    <servlet-mapping>
+        <servlet-name>WebSocketAdmServlet</servlet-name>
+        <url-pattern>/adm</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>WebSocketSignInServlet</servlet-name>
+        <url-pattern>/signin</url-pattern>
+    </servlet-mapping>
+
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+</web-app>

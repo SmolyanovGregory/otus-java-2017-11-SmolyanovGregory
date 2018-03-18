@@ -1,0 +1,122 @@
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Admin page</title>
+    <script type="text/javascript">
+      var ws;
+      var isProcessRunning = false;
+
+      function init() {
+        ws = new WebSocket("ws://localhost:8080/adm");
+
+        setRunProcessButtonValue(false);
+			
+        ws.onopen = function (event) {
+        }
+			
+        ws.onmessage = function (event) {
+          var cacheStateInfo = JSON.parse(event.data);
+
+          document.getElementById("cacheSize").innerHTML = cacheStateInfo.cacheSize;				
+          document.getElementById("hitCount").innerHTML = cacheStateInfo.hitCount;				
+          document.getElementById("missCount").innerHTML = cacheStateInfo.missCount;				
+          document.getElementById("lifeTimeMs").innerHTML = cacheStateInfo.lifeTimeMs;				
+          document.getElementById("idleTimeMs").innerHTML = cacheStateInfo.idleTimeMs;				
+          document.getElementById("isEternal").innerHTML = cacheStateInfo.isEternal;
+        }
+			
+        ws.onclose = function (event) {
+        }
+      };
+
+      function setRunProcessButtonValue() {
+        var btnValue = " user generating process";
+
+        if (isProcessRunning) {
+          btnValue = "Stop"+btnValue;
+        } else {
+          btnValue = "Start"+btnValue;
+        }          
+        document.getElementById("processButton").value = btnValue;
+      }
+
+      function runUserGenerationProcess() {
+        isProcessRunning = !isProcessRunning;
+		  
+        setRunProcessButtonValue();
+
+        var json = JSON.stringify({key : "runProcess", value : ""+isProcessRunning});
+        ws.send(json);
+      }
+
+      function refreshCacheInfo(){
+        var json = JSON.stringify({key : "refresh", value : "true"});
+        ws.send(json);
+      }	
+	</script>
+</head>
+
+<body onload="init();">
+
+<table border=1 cellspacing=0 cellpadding=0>
+    <tr>
+        <td width=200 valign=center align=center colspan="2">
+            Cache status:
+        </td>
+    </tr>
+
+    <tr>
+        <td width=100 valign=center align=left>Cache size:</td>
+        <td width=100 valign=center align=center id="cacheSize"></td>
+    </tr>
+
+    <tr>
+        <td width=100 valign=center align=left>Hit count:</td>
+        <td width=100 valign=center align=center id="hitCount"></td>
+    </tr>
+
+    <tr>
+        <td width=100 valign=center align=left>Miss count:</td>
+        <td width=100 valign=center align=center id="missCount"></td>
+    </tr>
+
+    <tr>
+        <td width=100 valign=center align=left>Life time, ms:</td>
+        <td width=100 valign=center align=center id="lifeTimeMs"></td>
+    </tr>
+
+    <tr>
+        <td width=100 valign=center align=left>Idle time, ms:</td>
+        <td width=100 valign=center align=center id="idleTimeMs"></td>
+    </tr>
+
+    <tr>
+        <td width=100 valign=center align=left>Is eternal:</td>
+        <td width=100 valign=center align=center id="isEternal"></td>
+    </tr>
+</table>
+
+<br>
+
+<form method="POST" name="formRefresh">
+    <table border=0 cellspacing=0 cellpadding=0>
+        <tr>
+            <td width=200 valign=center align=center>
+                <input type="button" id="refreshButton" value="Refresh" onclick="refreshCacheInfo();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<form method="POST" name="formrunProcess">
+    <table border=0 cellspacing=0 cellpadding=0>
+        <tr>
+            <td width=200 valign=center align=center>
+                <input type="button" id="processButton" value="" onclick="runUserGenerationProcess();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>
