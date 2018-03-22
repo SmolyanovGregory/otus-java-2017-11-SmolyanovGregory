@@ -10,30 +10,35 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
+import ru.otus.smolyanov.app.DBService;
+import ru.otus.smolyanov.app.MessageSystemContext;
 import ru.otus.smolyanov.base.*;
-import ru.otus.smolyanov.dbservice.dao.UserDataSetDAO;
 import ru.otus.smolyanov.cacheservice.*;
-import java.util.List;
-import java.util.Map;
+import ru.otus.smolyanov.dbservice.dao.ChatMessageDataSetDAO;
+import ru.otus.smolyanov.messageSystem.*;
 import ru.otus.smolyanov.util.PropertiesHelper;
+import java.util.List;
 import java.util.Properties;
 
-public class DBServiceCachedImpl implements DBService {
 
+public class DBServiceCachedImpl implements DBService {
   private static final String HIBERNATE_PROPERTIES_NAME = "hibernate.properties";
   private static final String CACHE_PROPERTIES_NAME = "cache.properties";
 
   private final SessionFactory sessionFactory;
   private final CacheService<DataSet> cache;
 
-  public DBServiceCachedImpl() {
+  private final Address address;
+  private final MessageSystemContext context;
+
+  public DBServiceCachedImpl(MessageSystemContext context, Address address) {
+    this.context = context;
+    this.address = address;
+
     Configuration configuration = new Configuration();
 
-    configuration.addAnnotatedClass(UserDataSet.class);
-    configuration.addAnnotatedClass(PhoneDataSet.class);
-    configuration.addAnnotatedClass(AddressDataSet.class);
+    configuration.addAnnotatedClass(ChatMessageDataSet.class);
 
     configuration.addProperties(PropertiesHelper.getProperies(HIBERNATE_PROPERTIES_NAME));
 
@@ -54,54 +59,7 @@ public class DBServiceCachedImpl implements DBService {
   }
 
   @Override
-  public String getMetaData() {
-    Map<String, Object> properties = sessionFactory.getProperties();
-    return "Connected to: " +
-        properties.get(Environment.URL).toString() +
-        "\n" +
-        "Driver: " +
-        properties.get(Environment.DRIVER).toString();
-  }
-
-  @Override
-  public UserDataSet getUser(long id) {
-    DataSet user = cache.get(getCacheKey(id, UserDataSet.class));
-
-    if (user != null) {
-      System.out.println("--> read user(id="+id+") from cache");
-      return (UserDataSet) user;
-    } else {
-      try (Session session = sessionFactory.openSession()) {
-        System.out.println("==> read user(id="+id+") from DB");
-        return new UserDataSetDAO(session).load(id);
-      }
-    }
-  }
-
-  @Override
-  public List<UserDataSet> getAllUsers() {
-    try (Session session = sessionFactory.openSession()) {
-      List<UserDataSet> result = new UserDataSetDAO(session).loadAll();
-      // store in cache
-      for (UserDataSet user : result) {
-        cache.put(getCacheKey(user), user);
-      }
-
-      return result;
-    }
-  }
-
-  @Override
-  public void saveUser(UserDataSet user) {
-    try (Session session = sessionFactory.openSession()) {
-      new UserDataSetDAO(session).save(user);
-    }
-    cache.put(getCacheKey(user), user);
-  }
-
-  @Override
   public void close() throws Exception {
-    System.out.println("Cache statisics: hit count = "+cache.getHitCount()+"; miss count = "+cache.getMissCount());
     cache.dispose();
     sessionFactory.close();
   }
@@ -123,5 +81,41 @@ public class DBServiceCachedImpl implements DBService {
 
   public CacheService<DataSet> getCache() {
     return cache;
+  }
+
+  @Override
+  public void init() {
+    context.getMessageSystem().addAddressee(this);
+  }
+
+  @Override
+  public void saveChatMessage(ChatMessageDataSet chatMessageDataSet) {
+    try (Session session = sessionFactory.openSession()) {
+      new ChatMessageDataSetDAO(session).save(chatMessageDataSet);
+    }
+    cache.put(getCacheKey(chatMessageDataSet), chatMessageDataSet);
+  }
+
+  @Override
+  public List<ChatMessageDataSet> getAllChatMessage() {
+    try (Session session = sessionFactory.openSession()) {
+      List<ChatMessageDataSet> result = new ChatMessageDataSetDAO(session).loadAll();
+      // store in cache
+      for (ChatMessageDataSet msg : result) {
+        cache.put(getCacheKey(msg), msg);
+      }
+
+      return result;
+    }
+  }
+
+  @Override
+  public Address getAddress() {
+    return address;
+  }
+
+  @Override
+  public MessageSystem getMS() {
+    return context.getMessageSystem();
   }
 }

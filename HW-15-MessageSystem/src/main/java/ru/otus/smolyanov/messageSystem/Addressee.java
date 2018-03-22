@@ -1,10 +1,13 @@
 package ru.otus.smolyanov.messageSystem;
 
 /**
- * @author tully
+ * Created by Gregory Smolyanov.
+ * <p>
+ * Home work 15 (message system)
  */
-public interface Addressee {
-    Address getAddress();
 
-    MessageSystem getMS();
+public interface Addressee {
+  Address getAddress();
+
+  MessageSystem getMS();
 }

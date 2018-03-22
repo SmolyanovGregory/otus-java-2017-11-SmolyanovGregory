@@ -10,17 +10,17 @@ import ru.otus.smolyanov.messageSystem.Message;
  * Home work 15 (message system)
  */
 
-public abstract class MsgToDB extends Message {
-  public MsgToDB(Address from, Address to) {
+public abstract class MsgToChat extends Message {
+  public MsgToChat(Address from, Address to) {
     super(from, to);
   }
 
   @Override
   public void exec(Addressee addressee) {
-    if (addressee instanceof DBService) {
-      exec((DBService) addressee);
+    if (addressee instanceof ChatService) {
+      exec((ChatService) addressee);
     }
   }
 
-  public abstract void exec(DBService dbService);
+  public abstract void exec(ChatService chatService);
 }

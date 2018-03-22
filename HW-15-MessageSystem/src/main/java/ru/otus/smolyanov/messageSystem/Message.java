@@ -1,24 +1,27 @@
 package ru.otus.smolyanov.messageSystem;
 
 /**
- * @author tully
+ * Created by Gregory Smolyanov.
+ * <p>
+ * Home work 15 (message system)
  */
+
 public abstract class Message {
-    private final Address from;
-    private final Address to;
+  private final Address from;
+  private final Address to;
 
-    public Message(Address from, Address to) {
-        this.from = from;
-        this.to = to;
-    }
+  public Message(Address from, Address to) {
+    this.from = from;
+    this.to = to;
+  }
 
-    public Address getFrom() {
-        return from;
-    }
+  public Address getFrom() {
+    return from;
+  }
 
-    public Address getTo() {
-        return to;
-    }
+  public Address getTo() {
+    return to;
+  }
 
-    public abstract void exec(Addressee addressee);
+  public abstract void exec(Addressee addressee);
 }

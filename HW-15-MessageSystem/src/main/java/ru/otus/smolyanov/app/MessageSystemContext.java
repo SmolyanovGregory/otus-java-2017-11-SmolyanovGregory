@@ -4,35 +4,38 @@ import ru.otus.smolyanov.messageSystem.Address;
 import ru.otus.smolyanov.messageSystem.MessageSystem;
 
 /**
- * Created by tully.
+ * Created by Gregory Smolyanov.
+ * <p>
+ * Home work 15 (message system)
  */
+
 public class MessageSystemContext {
-    private final MessageSystem messageSystem;
+  private final MessageSystem messageSystem;
 
-    private Address frontAddress;
-    private Address dbAddress;
+  private Address dbAddress;
+  private Address chatAddress;
 
-    public MessageSystemContext(MessageSystem messageSystem) {
-        this.messageSystem = messageSystem;
-    }
+  public MessageSystemContext(MessageSystem messageSystem) {
+    this.messageSystem = messageSystem;
+  }
 
-    public MessageSystem getMessageSystem() {
-        return messageSystem;
-    }
+  public MessageSystem getMessageSystem() {
+    return messageSystem;
+  }
 
-    public Address getFrontAddress() {
-        return frontAddress;
-    }
+  public Address getDbAddress() {
+    return dbAddress;
+  }
 
-    public void setFrontAddress(Address frontAddress) {
-        this.frontAddress = frontAddress;
-    }
+  public void setDbAddress(Address dbAddress) {
+    this.dbAddress = dbAddress;
+  }
 
-    public Address getDbAddress() {
-        return dbAddress;
-    }
+  public Address getChatAddress() {
+    return chatAddress;
+  }
 
-    public void setDbAddress(Address dbAddress) {
-        this.dbAddress = dbAddress;
-    }
+  public void setChatAddress(Address chatAddress) {
+    this.chatAddress = chatAddress;
+  }
 }

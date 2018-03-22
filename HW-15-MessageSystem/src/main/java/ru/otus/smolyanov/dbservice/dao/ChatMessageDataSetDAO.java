@@ -11,30 +11,30 @@ import org.hibernate.Transaction;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
-import ru.otus.smolyanov.base.UserDataSet;
+import ru.otus.smolyanov.base.ChatMessageDataSet;
 
-public class UserDataSetDAO {
+public class ChatMessageDataSetDAO {
 
   private final Session session;
 
-  public UserDataSetDAO(Session session) {
+  public ChatMessageDataSetDAO(Session session) {
     this.session = session;
   }
 
-  public void save(UserDataSet user){
+  public void save(ChatMessageDataSet chatMessage){
     Transaction tr = session.beginTransaction();
-    session.saveOrUpdate(user);
+    session.saveOrUpdate(chatMessage);
     tr.commit();
   }
 
-  public UserDataSet load(long id){
-    return session.load(UserDataSet.class, id);
+  public ChatMessageDataSet load(long id){
+    return session.load(ChatMessageDataSet.class, id);
   }
 
-  public List<UserDataSet> loadAll(){
+  public List<ChatMessageDataSet> loadAll(){
     CriteriaBuilder builder = session.getCriteriaBuilder();
-    CriteriaQuery<UserDataSet> criteria = builder.createQuery(UserDataSet.class);
-    criteria.from(UserDataSet.class);
+    CriteriaQuery<ChatMessageDataSet> criteria = builder.createQuery(ChatMessageDataSet.class);
+    criteria.from(ChatMessageDataSet.class);
 
     return session.createQuery(criteria).list();
   }

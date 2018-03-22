@@ -3,36 +3,39 @@ package ru.otus.smolyanov.messageSystem;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @author tully
+ * Created by Gregory Smolyanov.
+ * <p>
+ * Home work 15 (message system)
  */
+
 public final class Address {
-    private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
-    private final String id;
+  private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
+  private final String id;
 
-    public Address(){
-        id = String.valueOf(ID_GENERATOR.getAndIncrement());
-    }
+  public Address(){
+    id = String.valueOf(ID_GENERATOR.getAndIncrement());
+  }
 
-    public Address(String id) {
-        this.id = id;
-    }
+  public Address(String id) {
+    this.id = id;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-        Address address = (Address) o;
+    Address address = (Address) o;
 
-        return id != null ? id.equals(address.id) : address.id == null;
-    }
+    return id != null ? id.equals(address.id) : address.id == null;
+  }
 
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
+  @Override
+  public int hashCode() {
+    return id != null ? id.hashCode() : 0;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 }

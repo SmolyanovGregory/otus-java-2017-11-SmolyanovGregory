@@ -6,29 +6,23 @@
     <description>Home work 15 (message system)</description>
 
     <servlet>
-        <servlet-name>WebSocketAdmServlet</servlet-name>
-        <servlet-class>ru.otus.smolyanov.servlets.WebSocketAdmServlet</servlet-class>
+        <servlet-name>WebSocketChatServlet</servlet-name>
+        <servlet-class>ru.otus.smolyanov.servlets.WebSocketChatServlet</servlet-class>
     </servlet>
 
-    <servlet>
-        <servlet-name>WebSocketSignInServlet</servlet-name>
-        <servlet-class>ru.otus.smolyanov.servlets.WebSocketSignInServlet</servlet-class>
-    </servlet>
-
-
     <servlet-mapping>
-        <servlet-name>WebSocketAdmServlet</servlet-name>
-        <url-pattern>/adm</url-pattern>
+        <servlet-name>WebSocketChatServlet</servlet-name>
+        <url-pattern>/chat</url-pattern>
     </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>WebSocketSignInServlet</servlet-name>
-        <url-pattern>/signin</url-pattern>
-    </servlet-mapping>
-
 
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>chat.html</welcome-file>
     </welcome-file-list>
+
+    <listener>
+        <listener-class>
+            ru.otus.smolyanov.listener.AppServletContextListener
+        </listener-class>
+    </listener>
 
 </web-app>
