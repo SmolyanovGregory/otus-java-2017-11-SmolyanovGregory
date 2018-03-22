@@ -4,21 +4,23 @@
     <title>Simple chat</title>
     <script type="text/javascript">
         var ws;
+
         function init() {
             ws = new WebSocket("ws://localhost:8080/chat");
+
             ws.onopen = function (event) {
             }
 
             ws.onmessage = function (event) {
               var obj = JSON.parse(event.data);
-              var $textarea = document.getElementById("messageList");
+              var textAreaField = document.getElementById("messageList");
 
-              if (obj.responseType = 'message') {
-                $textarea.value = $textarea.value + obj.body + "\n";
-              } else if (obj.responseType = 'history') {
-                $textarea.value = obj.body + "\n";
+              if (obj.responseType = "message") {
+               textAreaField.value = textAreaField.value + obj.body + "\n";
+
+              } else if (obj.responseType = "history") {
+                textAreaField("messageList").value = obj.body + "\n";
               }
-              //$textarea.value = $textarea.value + event.data + "\n";
             }
 
             ws.onclose = function (event) {
@@ -33,7 +35,7 @@
             var json = JSON.stringify({msgType : messageType, user : userNameField.value, message : messageField.value});
 						
             ws.send(json);
-            messageField.value = '';
+            messageField.value = "";
         }
 
         function loadChatHistory() {
@@ -47,28 +49,22 @@
 
 <body onload="init();">
 
-<div id="body">
-    <div id="menu">
-        <p class="welcome">
-            User name: <input id="username" value="anonymous"/>
-        </p>
+  <form name="message" action="">
+    <p class="welcome">
+      User name: <input id="username" value="Anonymous"/>
+    </p>
 
-        <div style="clear: both"></div>
-    </div>
-	
+    <br>
+
+    <textarea inputtype="text" id="messageList" name="messageList" rows="20" cols="70" WRAP=virtual readonly></textarea>
+
 	<br>
 
-    <div id="chatbox">
-        <textarea id="messageList" rows="20" cols="70" readonly="readonly"></textarea>
-    </div>
-	
-	<br>
-
-    <form name="message" action="">
-        <input name="usermsg" type="text" id="message" size="70"/>
-        <input type="button" name="submitmsg" value="Send..." onclick="sendMessage();"/>
-        <input type="button" name="loadHistory" value="Load chat history" onclick="loadChatHistory();"/>
-    </form>
-</div>
+    <input name="usermsg" type="text" id="message" size="70"/>
+    <input type="button" name="submitmsg" value="Send..." onclick="sendMessage();"/>
+    <br>
+    <br>
+    <input type="button" name="loadHistory" value="Load chat history" onclick="loadChatHistory();"/>
+  </form>
 </body>
 </html>

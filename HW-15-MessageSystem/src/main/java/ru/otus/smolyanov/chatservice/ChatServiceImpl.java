@@ -1,4 +1,4 @@
-package ru.otus.smolyanov.chat;
+package ru.otus.smolyanov.chatservice;
 
 import ru.otus.smolyanov.app.ChatService;
 import ru.otus.smolyanov.app.MessageSystemContext;
@@ -6,13 +6,17 @@ import ru.otus.smolyanov.base.ChatMessageDataSet;
 import ru.otus.smolyanov.messageSystem.Address;
 import ru.otus.smolyanov.messageSystem.Message;
 import ru.otus.smolyanov.messageSystem.MessageSystem;
-import ru.otus.smolyanov.messages.MsgGetAllChatMessages;
+import ru.otus.smolyanov.messageSystem.messages.MsgGetAllChatMessages;
 import ru.otus.smolyanov.websocket.ChatWebSocket;
-
-import java.util.*;
+import java.util.Set;
+import java.util.List;
+import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
-import ru.otus.smolyanov.messages.MsgSaveChatMessage;
+import ru.otus.smolyanov.messageSystem.messages.MsgSaveChatMessage;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by Gregory Smolyanov.
@@ -22,6 +26,7 @@ import com.google.gson.Gson;
 
 public class ChatServiceImpl implements ChatService {
 
+  private final static Logger logger = LogManager.getLogger(ChatServiceImpl.class.getName());
   private final Set<ChatWebSocket> webSockets;
   private final Address address;
   private final MessageSystemContext context;
@@ -58,8 +63,8 @@ public class ChatServiceImpl implements ChatService {
   }
 
   @Override
-  public void handleGetAllMessagesRequest() {
-    Message message = new MsgGetAllChatMessages(getAddress(), context.getDbAddress());
+  public void handleGetAllMessagesRequest(ChatWebSocket webSocket) {
+    Message message = new MsgGetAllChatMessages(getAddress(), context.getDbAddress(), webSocket);
     context.getMessageSystem().sendMessage(message);
   }
 
@@ -79,33 +84,31 @@ public class ChatServiceImpl implements ChatService {
   }
 
   private String getformattedMessage(String user, String chatMessage) {
-    Map<String, String> response = new HashMap<>();
-    response.put("responseType", "message");
-    response.put("body", user + ": " + chatMessage);
+    JsonObject jsonObj = new JsonObject();
+    jsonObj.addProperty("responseType", "message");
+    jsonObj.addProperty("body", user + ": " + chatMessage);
 
-    return gson.toJson(response);
+    return gson.toJson(jsonObj);
   }
 
   @Override
-  public void restoreAllChatMessages (List<ChatMessageDataSet> messageList) {
-    StringBuffer sb = new StringBuffer();
+  public void restoreAllChatMessages (List<ChatMessageDataSet> messageList, ChatWebSocket webSocket) {
+    StringBuilder sb = new StringBuilder();
     for (ChatMessageDataSet ds : messageList) {
-      if (sb.length() == 0) {
+      if (sb.length() != 0) {
         sb.append("\n");
       }
       sb.append(ds.getUserName()).append(": ").append(ds.getMessageBody());
     }
 
-    Map<String, String> response = new HashMap<>();
-    response.put("responseType", "history");
-    response.put("body", sb.toString());
+    JsonObject jsonObj = new JsonObject();
+    jsonObj.addProperty("responseType", "history");
+    jsonObj.addProperty("body", sb.toString());
 
-    for (ChatWebSocket ws : webSockets) {
-      try {
-        ws.sendString(gson.toJson(response));
-      } catch (Exception e) {
-        System.out.println(e.getMessage());
-      }
+    try {
+      webSocket.sendString(gson.toJson(jsonObj));
+    } catch (Exception e) {
+      logger.error(e.getMessage());
     }
   }
 }

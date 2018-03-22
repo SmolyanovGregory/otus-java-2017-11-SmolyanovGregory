@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by Gregory Smolyanov.
@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 
 public final class MessageSystem {
-  private final static Logger logger = Logger.getLogger(MessageSystem.class.getName());
+  private final static Logger logger = LogManager.getLogger(MessageSystem.class.getName());
   private static final int DEFAULT_STEP_TIME = 10;
 
   private final List<Thread> workers;
@@ -39,6 +39,7 @@ public final class MessageSystem {
 
   @SuppressWarnings("InfiniteLoopStatement")
   public void start() {
+    logger.info("Message system start...");
     for (Map.Entry<Address, Addressee> entry : addresseeMap.entrySet()) {
       String name = "MS-worker-" + entry.getKey().getId();
       Thread thread = new Thread(() -> {
@@ -53,12 +54,12 @@ public final class MessageSystem {
          try {
            Thread.sleep(MessageSystem.DEFAULT_STEP_TIME);
          } catch (InterruptedException e) {
-           logger.log(Level.INFO, "Thread interrupted. Finishing: " + name);
+           logger.info("Thread interrupted. Finishing: " + name);
            return;
          }
 
           if (Thread.currentThread().isInterrupted()) {
-            logger.log(Level.INFO, "Finishing: " + name);
+            logger.info("Finishing: " + name);
             return;
           }
         }

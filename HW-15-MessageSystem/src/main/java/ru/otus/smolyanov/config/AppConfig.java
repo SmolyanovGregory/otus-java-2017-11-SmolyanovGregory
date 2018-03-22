@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Description;
 import ru.otus.smolyanov.app.ChatService;
-import ru.otus.smolyanov.chat.ChatServiceImpl;
+import ru.otus.smolyanov.chatservice.ChatServiceImpl;
 import ru.otus.smolyanov.app.DBService;
 import ru.otus.smolyanov.dbservice.DBServiceCachedImpl;
 import ru.otus.smolyanov.messageSystem.Address;
@@ -48,8 +48,6 @@ public class AppConfig implements Consts{
   @Description("Provides a database service")
   public DBService dbService() {
     MessageSystemContext context = messageSystemContext();
-    DBService dbService = new DBServiceCachedImpl(context, context.getDbAddress());
-
-    return dbService;
+    return new DBServiceCachedImpl(context, context.getDbAddress());
   }
 }

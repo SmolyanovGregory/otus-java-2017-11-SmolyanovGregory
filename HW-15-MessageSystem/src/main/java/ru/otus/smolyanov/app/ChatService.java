@@ -21,7 +21,7 @@ public interface ChatService extends Addressee {
 
   void handleMessageRequest(ChatMessageDataSet chatMessage);
 
-  void restoreAllChatMessages(List<ChatMessageDataSet> messageList);
+  void restoreAllChatMessages(List<ChatMessageDataSet> messageList, ChatWebSocket webSocket);
 
-  void handleGetAllMessagesRequest();
+  void handleGetAllMessagesRequest(ChatWebSocket webSocket);
 }

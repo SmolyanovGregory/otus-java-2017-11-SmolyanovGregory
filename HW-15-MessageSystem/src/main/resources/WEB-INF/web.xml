@@ -21,7 +21,7 @@
 
     <listener>
         <listener-class>
-            ru.otus.smolyanov.listener.AppServletContextListener
+            ru.otus.smolyanov.servlets.listener.AppServletContextListener
         </listener-class>
     </listener>
 

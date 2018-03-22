@@ -20,7 +20,7 @@ import ru.otus.smolyanov.base.ChatMessageDataSet;
 @WebSocket
 public class ChatWebSocket {
 
-  private ChatService chatService;
+  private final ChatService chatService;
   private Session session;
   private final Gson gson;
 
@@ -48,7 +48,7 @@ public class ChatWebSocket {
         break;
 
       case "history" :
-        chatService.handleGetAllMessagesRequest();
+        chatService.handleGetAllMessagesRequest(this);
         break;
     }
   }

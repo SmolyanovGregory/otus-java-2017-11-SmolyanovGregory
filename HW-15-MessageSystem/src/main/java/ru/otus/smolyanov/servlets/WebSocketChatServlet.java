@@ -23,7 +23,6 @@ public class WebSocketChatServlet extends WebSocketServlet implements Consts {
 
   private final static int LOGOUT_TIME = 10 * 60 * 1000;
   private ChatService chatService;
-  private ApplicationContext context;
 
   public WebSocketChatServlet() {
   }
@@ -31,6 +30,7 @@ public class WebSocketChatServlet extends WebSocketServlet implements Consts {
   public void init() throws ServletException {
     super.init();
     ServletContext ctx = getServletContext();
+    ApplicationContext context;
 
     Object attribute = ctx.getAttribute(APPLICATION_CONTEXT_PARAM_NAME);
     if (attribute == null) {
