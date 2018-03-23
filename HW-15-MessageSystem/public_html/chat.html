@@ -1,70 +1,80 @@
 <html>
 <head>
-    <meta charset="UTF-8"/>
-    <title>Simple chat</title>
-    <script type="text/javascript">
-        var ws;
+  <meta charset="UTF-8"/>
+  <title>Simple chat</title>
+  <script type="text/javascript">
+    var ws;
 
-        function init() {
-            ws = new WebSocket("ws://localhost:8080/chat");
+    function clearTextArea() {
+      document.getElementById("chatTextArea").value = "";
+    }
 
-            ws.onopen = function (event) {
-            }
+    function sendMessage() {
+      var messageField = document.getElementById("message");
+      var userNameField = document.getElementById("username");
+      var messageType = "message";
 
-            ws.onmessage = function (event) {
-              var obj = JSON.parse(event.data);
-              var textAreaField = document.getElementById("messageList");
+      var json = JSON.stringify({msgType : messageType, user : userNameField.value, message : messageField.value});
 
-              if (obj.responseType = "message") {
-               textAreaField.value = textAreaField.value + obj.body + "\n";
+      ws.send(json);
+      messageField.value = "";
+    }
 
-              } else if (obj.responseType = "history") {
-                textAreaField("messageList").value = obj.body + "\n";
-              }
-            }
+    function loadChatHistory() {
+      clearTextArea();
+      var json = JSON.stringify({msgType : 'history'});
+      ws.send(json);
+    }
 
-            ws.onclose = function (event) {
-            }
-        };
+    function processMessage(msg) {
+      var obj = JSON.parse(msg);
+      
+      if (obj.responseType = "message") {
+        document.getElementById("chatTextArea").value = document.getElementById("chatTextArea").value + obj.body + "\n";
 
-        function sendMessage() {
-            var messageField = document.getElementById("message");
-            var userNameField = document.getElementById("username");
-            var messageType = "message";
+      } else if (obj.responseType = "history") {
+        document.getElementById("chatTextArea").value = obj.body + "\n";
+      }
+    }
 
-            var json = JSON.stringify({msgType : messageType, user : userNameField.value, message : messageField.value});
-						
-            ws.send(json);
-            messageField.value = "";
-        }
+    function init() {
+      ws = new WebSocket("ws://localhost:8080/chat");     
+     
+      ws.onopen = function (event) {
+      }
 
-        function loadChatHistory() {
-            var json = JSON.stringify({msgType : 'history'});
+      ws.onmessage = function (event) {
+        processMessage(event.data);
+      }
 
-            ws.send(json);
-        }
+      ws.onclose = function (event) {
+      }
+    };
 
     </script>
 </head>
 
 <body onload="init();">
 
-  <form name="message" action="">
+<div id="menu">
     <p class="welcome">
-      User name: <input id="username" value="Anonymous"/>
+        User name: <input id="username" value="anonymous"/>
     </p>
 
-    <br>
+    <div style="clear: both"></div>
+</div>
 
-    <textarea inputtype="text" id="messageList" name="messageList" rows="20" cols="70" WRAP=virtual readonly></textarea>
+<div id="chatbox">
+    <textarea id="chatTextArea" rows="20" cols="70" readonly></textarea>
+</div>
 
-	<br>
-
+<form name="message" action="">
     <input name="usermsg" type="text" id="message" size="70"/>
     <input type="button" name="submitmsg" value="Send..." onclick="sendMessage();"/>
     <br>
     <br>
     <input type="button" name="loadHistory" value="Load chat history" onclick="loadChatHistory();"/>
-  </form>
+</form>
+
 </body>
 </html>
