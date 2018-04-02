@@ -1,0 +1,84 @@
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <title>Simple chat</title>
+  <script type="text/javascript">
+    var ws;
+
+    var qqq = "ws://"+window.location.hostname+":"+window.location.port+"/chat";
+    alert("qqq="+qqq);
+
+    function clearTextArea() {
+      document.getElementById("chatTextArea").value = "";
+    }
+
+    function sendMessage() {
+      var messageField = document.getElementById("message");
+      var userNameField = document.getElementById("username");
+      var messageType = "message";
+
+      var json = JSON.stringify({msgType : messageType, user : userNameField.value, message : messageField.value});
+
+      ws.send(json);
+      messageField.value = "";
+    }
+
+    function loadChatHistory() {
+      clearTextArea();
+      var json = JSON.stringify({msgType : 'history'});
+      ws.send(json);
+    }
+
+    function processMessage(msg) {
+      var obj = JSON.parse(msg);
+      
+      if (obj.responseType = "message") {
+        document.getElementById("chatTextArea").value = document.getElementById("chatTextArea").value + obj.body + "\n";
+
+      } else if (obj.responseType = "history") {
+        document.getElementById("chatTextArea").value = obj.body + "\n";
+      }
+    }
+
+    function init() {
+      var wsURL = "ws://"+window.location.hostname+":"+window.location.port+"/chat";
+      ws = new WebSocket(wsURL);
+     
+      ws.onopen = function (event) {
+      }
+
+      ws.onmessage = function (event) {
+        processMessage(event.data);
+      }
+
+      ws.onclose = function (event) {
+      }
+    };
+
+    </script>
+</head>
+
+<body onload="init();">
+
+<div id="menu">
+    <p class="welcome">
+        User name: <input id="username" value="anonymous"/>
+    </p>
+
+    <div style="clear: both"></div>
+</div>
+
+<div id="chatbox">
+    <textarea id="chatTextArea" rows="20" cols="70" readonly></textarea>
+</div>
+
+<form name="message" action="">
+    <input name="usermsg" type="text" id="message" size="70"/>
+    <input type="button" name="submitmsg" value="Send..." onclick="sendMessage();"/>
+    <br>
+    <br>
+    <input type="button" name="loadHistory" value="Load chat history" onclick="loadChatHistory();"/>
+</form>
+
+</body>
+</html>
