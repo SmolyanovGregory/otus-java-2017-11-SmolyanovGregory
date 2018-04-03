@@ -1,9 +1,11 @@
 package ru.otus.smolyanov.chatservice;
 
+import ru.otus.smolyanov.app.Msg;
 import ru.otus.smolyanov.base.ChatMessageDataSet;
+import ru.otus.smolyanov.channel.SocketMsgWorker;
+import ru.otus.smolyanov.messages.SaveChatMessageMsg;
 import ru.otus.smolyanov.websocket.ChatWebSocket;
 import java.util.Set;
-import java.util.List;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import com.google.gson.Gson;
@@ -21,16 +23,23 @@ public class ChatServiceImpl implements ChatService {
   private final static Logger logger = LogManager.getLogger(ChatServiceImpl.class.getName());
   private final Set<ChatWebSocket> webSockets;
   private final Gson gson = new Gson();
+  private final SocketMsgWorker worker;
 
-  public ChatServiceImpl() {
+  public ChatServiceImpl(SocketMsgWorker worker) {
     this.webSockets = Collections.newSetFromMap(new ConcurrentHashMap<>());
+    this.worker = worker;
   }
 
   @Override
   public void handleMessageRequest(ChatMessageDataSet chatMessage) {
-//    Message message = new MsgSaveChatMessage(getAddress(), context.getDbAddress(), chatMessage);
-//    context.getMessageSystem().sendMessage(message);
+    Msg message = new SaveChatMessageMsg(chatMessage);
+    worker.send(message);
+    logger.info("Send SaveChatMessage");
+  }
 
+  @Override
+  public void handleMessageAnswerRequest(ChatMessageDataSet chatMessage) {
+    logger.info("Process SaveChatMessageAnswer");
     for (ChatWebSocket ws : webSockets) {
       try {
         ws.sendString(getformattedMessage(chatMessage.getUserName(), chatMessage.getMessageBody()));
@@ -39,13 +48,6 @@ public class ChatServiceImpl implements ChatService {
       }
     }
   }
-
-  @Override
-  public void handleGetAllMessagesRequest(ChatWebSocket webSocket) {
-//    Message message = new MsgGetAllChatMessages(getAddress(), context.getDbAddress(), webSocket);
-//    context.getMessageSystem().sendMessage(message);
-  }
-
 
   @Override
   public void add(ChatWebSocket webSocket) {
@@ -63,26 +65,5 @@ public class ChatServiceImpl implements ChatService {
     jsonObj.addProperty("body", user + ": " + chatMessage);
 
     return gson.toJson(jsonObj);
-  }
-
-  @Override
-  public void restoreAllChatMessages (List<ChatMessageDataSet> messageList, ChatWebSocket webSocket) {
-    StringBuilder sb = new StringBuilder();
-    for (ChatMessageDataSet ds : messageList) {
-      if (sb.length() != 0) {
-        sb.append("\n");
-      }
-      sb.append(ds.getUserName()).append(": ").append(ds.getMessageBody());
-    }
-
-    JsonObject jsonObj = new JsonObject();
-    jsonObj.addProperty("responseType", "history");
-    jsonObj.addProperty("body", sb.toString());
-
-    try {
-      webSocket.sendString(gson.toJson(jsonObj));
-    } catch (Exception e) {
-      logger.error(e.getMessage());
-    }
   }
 }

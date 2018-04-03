@@ -15,7 +15,6 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -44,8 +43,7 @@ public class Main {
 
     // message handlers
     messageHandlers.put(InitSocketProcessingAddressAnswerMsg.class, processInitSocketProcessingAddressAnswer);
-    messageHandlers.put(SaveChatMessage.class, processSaveChatMessage);
-    messageHandlers.put(RequestAllChatMessageListMsg.class, processGetAllChatMessages);
+    messageHandlers.put(SaveChatMessageMsg.class, processSaveChatMessage);
   }
 
   public static void main(String... args) {
@@ -62,6 +60,7 @@ public class Main {
   }
 
   private void run() throws Exception {
+    logger.info("Database server started");
     dbService = new DBServiceCachedImpl();
     logger.info("DB service created");
 
@@ -70,9 +69,9 @@ public class Main {
     ObjectName mbName = new ObjectName("ru.otus.smolyanov:type=DatabaseServiceCache");
     mbs.registerMBean(cacheInfoMBean, mbName);
 
-    logger.info("Database server started");
     worker = new DatabaseSocketMsgWorker(host, port);
     worker.init();
+    logger.info("Worker inited");
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(this::process);
@@ -109,15 +108,9 @@ public class Main {
 
   private Function<Msg, Msg> processSaveChatMessage = message -> {
     logger.info("Process SaveChatMessage message...");
-    ChatMessageDataSet chatMessage = ((SaveChatMessage) message).getChatMessage();
+    ChatMessageDataSet chatMessage = ((SaveChatMessageMsg) message).getChatMessage();
     dbService.saveChatMessage(chatMessage);
-    return null;
-  };
-
-  private Function<Msg, Msg> processGetAllChatMessages = message -> {
-    logger.info("Process RequestAllChatMessageListMsg message...");
-    List<ChatMessageDataSet> chatMessages = dbService.getAllChatMessage();
-    return new RequestAllChatMessageListAnswerMsg(chatMessages);
+    return new SaveChatMessageAnswerMsg(chatMessage);
   };
 
   private Function<Msg, Msg> getMessageHandler(Class klass) {

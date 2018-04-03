@@ -87,7 +87,6 @@ public class SocketMsgWorker implements MsgWorker {
       String inputLine;
       StringBuilder stringBuilder = new StringBuilder();
       while ((inputLine = in.readLine()) != null) { //blocks
-        //System.out.println("Message received: " + inputLine);
         stringBuilder.append(inputLine);
         if (inputLine.isEmpty()) { //empty line is the end of the message
           String json = stringBuilder.toString();

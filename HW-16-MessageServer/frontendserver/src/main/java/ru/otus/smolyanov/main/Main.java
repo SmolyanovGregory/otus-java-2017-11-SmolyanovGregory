@@ -4,12 +4,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.otus.smolyanov.app.Msg;
 import ru.otus.smolyanov.app.Address;
+import ru.otus.smolyanov.base.ChatMessageDataSet;
 import ru.otus.smolyanov.channel.SocketMsgWorker;
 import ru.otus.smolyanov.chatservice.ChatService;
 import ru.otus.smolyanov.chatservice.ChatServiceImpl;
 import ru.otus.smolyanov.messages.*;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Function;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
@@ -31,11 +37,16 @@ public class Main {
   private SocketMsgWorker worker;
   private ChatService chatService;
   private static final String PUBLIC_HTML = "public_html";
+  private final Map<Class, Function<Msg, Msg>> messageHandlers = new HashMap<>();
 
   public Main(String host, int port, int identifier) {
     this.host = host;
     this.port = port;
     this.identifier = identifier;
+
+    // message handlers
+    messageHandlers.put(InitSocketProcessingAddressAnswerMsg.class, processInitSocketProcessingAddressAnswer);
+    messageHandlers.put(SaveChatMessageAnswerMsg.class, processSaveChatMessageAnswer);
   }
 
   public static void main(String... args) {
@@ -53,9 +64,13 @@ public class Main {
 
   private void run() throws Exception {
     logger.info("Frontend server started");
+
     worker = new FrontendSocketMsgWorker(host, port);
-    /*
-    chatService = new ChatServiceImpl();
+    worker.init();
+    logger.info("Worker inited");
+
+    chatService = new ChatServiceImpl(worker);
+    logger.info("Chat service created");
 
     ResourceHandler resourceHandler = new ResourceHandler();
     resourceHandler.setResourceBase(PUBLIC_HTML);
@@ -71,8 +86,6 @@ public class Main {
 
     server.start();
     logger.info("Jetty started on port "+serverPort);
-*/
-    worker.init();
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(this::process);
@@ -81,7 +94,7 @@ public class Main {
     Msg initMsg = new InitSocketProcessingAddressMsg(Address.FRONTEND, identifier);
     worker.send(initMsg);
 
-    //server.join();
+    server.join();
   }
 
   @SuppressWarnings("InfiniteLoopStatement")
@@ -91,17 +104,31 @@ public class Main {
         Msg msg = this.worker.take();
         logger.info("Message received: " + msg.toString());
 
-        if (msg instanceof InitSocketProcessingAddressAnswerMsg) {
-          logger.info("Server initialized on message server");
+        Msg responseMessage = getMessageHandler(msg.getClass()).apply(msg);
+        if (responseMessage != null) {
+          logger.info("Send response message: "+responseMessage.toString());
+          worker.send(responseMessage);
         }
-
-//        if (isServerInitializedOnMessageServer) {
-//          logger.info("process message "+msg.toString());
-//        }
 
       }
     } catch (InterruptedException e) {
       logger.error(e.getMessage());
     }
+  }
+
+  private Function<Msg, Msg> processInitSocketProcessingAddressAnswer = message -> {
+    logger.info("Server initialized on message server");
+    return null;
+  };
+
+  private Function<Msg, Msg> processSaveChatMessageAnswer = message -> {
+    logger.info("Process SaveChatMessageAnswer message...");
+    ChatMessageDataSet chatMessage = ((SaveChatMessageAnswerMsg) message).getChatMessage();
+    chatService.handleMessageAnswerRequest(chatMessage);
+    return null;
+  };
+
+  private Function<Msg, Msg> getMessageHandler(Class klass) {
+    return messageHandlers.get(klass);
   }
 }

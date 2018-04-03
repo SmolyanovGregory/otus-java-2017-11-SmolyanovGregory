@@ -2,7 +2,6 @@ package ru.otus.smolyanov.chatservice;
 
 import ru.otus.smolyanov.base.ChatMessageDataSet;
 import ru.otus.smolyanov.websocket.ChatWebSocket;
-import java.util.List;
 
 /**
  * Created by Gregory Smolyanov.
@@ -18,7 +17,6 @@ public interface ChatService {
 
   void handleMessageRequest(ChatMessageDataSet chatMessage);
 
-  void restoreAllChatMessages(List<ChatMessageDataSet> messageList, ChatWebSocket webSocket);
+  void handleMessageAnswerRequest(ChatMessageDataSet chatMessage);
 
-  void handleGetAllMessagesRequest(ChatWebSocket webSocket);
 }

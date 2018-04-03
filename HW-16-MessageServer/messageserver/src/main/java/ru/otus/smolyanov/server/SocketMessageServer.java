@@ -76,7 +76,6 @@ public class SocketMessageServer implements SocketMessageServerMBean {
 
               // send message to selected recipients
               List<MsgWorker> addressees = getAddresseeListForMsg(msg.getTo());
-
               for (MsgWorker addressee : addressees) {
                 addressee.send(msg);
               }

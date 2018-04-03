@@ -11,8 +11,6 @@ import ru.otus.smolyanov.dbservice.dao.ChatMessageDataSetDAO;
 import ru.otus.smolyanov.util.PropertiesHelper;
 import java.util.List;
 import java.util.Properties;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Created by Gregory Smolyanov.
@@ -22,7 +20,6 @@ import org.apache.logging.log4j.Logger;
 
 
 public class DBServiceCachedImpl implements DBService {
-  private static final Logger logger = LogManager.getLogger(DBServiceCachedImpl.class.getName());
   private static final String HIBERNATE_PROPERTIES_NAME = "hibernate.properties";
   private static final String CACHE_PROPERTIES_NAME = "cache.properties";
 

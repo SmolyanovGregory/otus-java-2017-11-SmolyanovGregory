@@ -12,8 +12,6 @@ import java.util.List;
 
 public interface DBService extends AutoCloseable {
 
-  //void init();
-
   CacheService<DataSet> getCache();
 
   void saveChatMessage(ChatMessageDataSet chatMessageDataSet);

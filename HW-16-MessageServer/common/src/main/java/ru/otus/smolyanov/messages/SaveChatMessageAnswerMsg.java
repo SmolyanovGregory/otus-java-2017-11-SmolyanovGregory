@@ -10,12 +10,12 @@ import ru.otus.smolyanov.base.ChatMessageDataSet;
  * Home work 16 (message server)
  */
 
-public class SaveChatMessage extends Msg {
+public class SaveChatMessageAnswerMsg extends Msg {
 
   private final ChatMessageDataSet chatMessage;
 
-  public SaveChatMessage(ChatMessageDataSet chatMessage) {
-    super(SaveChatMessage.class, Address.FRONTEND, Address.DATABASE);
+  public SaveChatMessageAnswerMsg(ChatMessageDataSet chatMessage) {
+    super(SaveChatMessageAnswerMsg.class, Address.DATABASE, Address.FRONTEND);
     this.chatMessage = chatMessage;
   }
 
@@ -25,7 +25,6 @@ public class SaveChatMessage extends Msg {
 
   @Override
   public String toString() {
-    return "SaveChatMessage{" + "user=" + chatMessage.getUserName()+ ", messageBody="+chatMessage.getMessageBody() +'}';
+    return "SaveChatMessageAnswerMsg{" + "user=" + chatMessage.getUserName()+ ", messageBody="+chatMessage.getMessageBody() +'}';
   }
-
 }
