@@ -4,7 +4,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ru.otus.smolyanov.Consts;
 import ru.otus.smolyanov.app.ChatService;
 import ru.otus.smolyanov.config.AppConfig;
 import ru.otus.smolyanov.app.DBService;
@@ -12,7 +11,9 @@ import ru.otus.smolyanov.messageSystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class AppServletContextListener implements ServletContextListener, Consts {
+import static ru.otus.smolyanov.Consts.*;
+
+public class AppServletContextListener implements ServletContextListener {
 
   private final static Logger logger = LogManager.getLogger(AppServletContextListener.class.getName());
   private ApplicationContext context;

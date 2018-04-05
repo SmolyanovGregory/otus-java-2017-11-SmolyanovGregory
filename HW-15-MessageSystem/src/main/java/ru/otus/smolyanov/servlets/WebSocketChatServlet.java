@@ -12,14 +12,12 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.otus.smolyanov.app.ChatService;
-import ru.otus.smolyanov.config.AppConfig;
 import ru.otus.smolyanov.websocket.ChatWebSocket;
-import ru.otus.smolyanov.Consts;
+import static ru.otus.smolyanov.Consts.*;
 
 @WebServlet(name = "WebSocketChatServlet", urlPatterns = {"/chat"})
-public class WebSocketChatServlet extends WebSocketServlet implements Consts {
+public class WebSocketChatServlet extends WebSocketServlet{
 
   private final static int LOGOUT_TIME = 10 * 60 * 1000;
   private ChatService chatService;
@@ -33,11 +31,10 @@ public class WebSocketChatServlet extends WebSocketServlet implements Consts {
     ApplicationContext context;
 
     Object attribute = ctx.getAttribute(APPLICATION_CONTEXT_PARAM_NAME);
-    if (attribute == null) {
-      context = new AnnotationConfigApplicationContext(AppConfig.class);
-      ctx.setAttribute(APPLICATION_CONTEXT_PARAM_NAME, context);
-    } else {
+    if (attribute != null) {
       context = (ApplicationContext) attribute;
+    } else {
+      throw new RuntimeException("Application context not found");
     }
 
     chatService = (ChatService) context.getBean(CHAT_SERVICE);

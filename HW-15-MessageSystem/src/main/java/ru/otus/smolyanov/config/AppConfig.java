@@ -10,7 +10,7 @@ import ru.otus.smolyanov.dbservice.DBServiceCachedImpl;
 import ru.otus.smolyanov.messageSystem.Address;
 import ru.otus.smolyanov.messageSystem.MessageSystem;
 import ru.otus.smolyanov.app.MessageSystemContext;
-import ru.otus.smolyanov.Consts;
+import static ru.otus.smolyanov.Consts.*;
 
 /**
  * Created by Gregory Smolyanov.
@@ -19,7 +19,7 @@ import ru.otus.smolyanov.Consts;
  */
 
 @Configuration
-public class AppConfig implements Consts{
+public class AppConfig {
 
   @Bean(name = MESSAGE_SYSTEM)
   @Description("Provides a message system")
